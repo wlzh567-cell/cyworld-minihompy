@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import CassettePlayer from "@/components/CassettePlayer";
 import HeroSection from "@/components/HeroSection";
 import InteractiveSandbox, { PlacedFurniture } from "@/components/InteractiveSandbox";
+import GuestbookSection from "@/components/GuestbookSection";
 import FeaturesBentoGrid from "@/components/FeaturesBentoGrid";
 import MilestoneSection from "@/components/MilestoneSection";
 import ShareableRoomGenerator from "@/components/ShareableRoomGenerator";
@@ -61,6 +62,9 @@ export default function Home() {
         currentMood={currentMood}
         setCurrentMood={setCurrentMood}
       />
+
+      {/* Section 2.5: Interactive Mobile-Optimized Guestbook Rolling Paper */}
+      <GuestbookSection />
 
       {/* Section 3: Features Bento Grid */}
       <FeaturesBentoGrid />

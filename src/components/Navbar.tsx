@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Link from "next/link";
-import { Sparkles, Menu, X, Home } from "lucide-react";
+import { Sparkles, Menu, X, Home, MessageSquare } from "lucide-react";
 
 interface NavbarProps {
   onOpenPreReg: () => void;
@@ -34,6 +34,13 @@ export default function Navbar({ onOpenPreReg }: NavbarProps) {
             className="text-xs font-bold text-[#676D82] hover:text-[#FF6B57] transition-colors"
           >
             룸 꾸미기 체험
+          </Link>
+          <Link
+            href="#guestbook"
+            className="text-xs font-bold text-[#676D82] hover:text-[#FF6B57] transition-colors flex items-center gap-1"
+          >
+            <MessageSquare className="w-3.5 h-3.5 text-[#FF6B57]" />
+            <span>감성 방명록</span>
           </Link>
           <Link
             href="#features"
@@ -87,6 +94,14 @@ export default function Navbar({ onOpenPreReg }: NavbarProps) {
               className="py-1 hover:text-[#FF6B57]"
             >
               룸 꾸미기 체험 (Sandbox)
+            </Link>
+            <Link
+              href="#guestbook"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1 hover:text-[#FF6B57] flex items-center justify-between"
+            >
+              <span>감성 방명록 (롤링페이퍼)</span>
+              <span className="text-[10px] bg-[#FF6B57] text-white px-2 py-0.5 rounded-full">NEW</span>
             </Link>
             <Link
               href="#features"
