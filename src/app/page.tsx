@@ -21,13 +21,24 @@ export default function Home() {
   const [totalCount, setTotalCount] = useState(74820);
   const [currentMood, setCurrentMood] = useState<"noon" | "sunset" | "dawn">("noon");
 
-  // Shared Sandbox & Story Generator Furniture state
+  // Shared Sandbox & Story Generator: Initialized packed with lively Cyworld Minimis and Party Props!
   const [placedItems, setPlacedItems] = useState<PlacedFurniture[]>([
-    { id: "lamp", x: 1, y: 1 },
-    { id: "sofa", x: 2, y: 4 },
-    { id: "turntable", x: 4, y: 2 },
-    { id: "plant", x: 6, y: 6 },
-    { id: "mac", x: 5, y: 3 },
+    { id: "grand_piano", x: 1, y: 1, bubble: "쇼팽 녹턴 연주 중 🎶" },
+    { id: "minimi_piano", x: 1, y: 2 },
+    { id: "party_table", x: 0, y: 4, bubble: "맛있는 음식 가득! 🍷" },
+    { id: "minimi_me", x: 2, y: 4, bubble: "온룸에 오신 걸 환영해요! 🌸" },
+    { id: "minimi_cheer", x: 3, y: 4, bubble: "다 같이 짠~ 건배! 🥂" },
+    { id: "cake_table", x: 5, y: 1, bubble: "생일 축하합니다! 🎂" },
+    { id: "minimi_guitar", x: 6, y: 1, bubble: "기타 솔로 연주 🎸" },
+    { id: "pet_dog", x: 3, y: 6, bubble: "멍멍! 반가워요 꼬리 붕붕 🐾" },
+    { id: "sofa", x: 4, y: 3 },
+    { id: "turntable", x: 6, y: 3 },
+    { id: "lamp", x: 0, y: 1 },
+    { id: "plant", x: 2, y: 0 },
+    { id: "mac", x: 6, y: 5 },
+    { id: "poster", x: 0, y: 3 },
+    { id: "beach_set", x: 6, y: 7 },
+    { id: "minimi_surf", x: 7, y: 7, bubble: "파도타기 최고! 🏄‍♂️" },
   ]);
 
   const handleOpenPreReg = (contact?: string) => {
@@ -54,7 +65,7 @@ export default function Home() {
       {/* Section 1: Hero */}
       <HeroSection onOpenPreReg={handleOpenPreReg} />
 
-      {/* Section 2: Interactive Sandbox */}
+      {/* Section 2: Expansive Packed Cyworld Miniroom Sandbox */}
       <InteractiveSandbox
         onSaveRoom={() => handleOpenPreReg()}
         placedItems={placedItems}
