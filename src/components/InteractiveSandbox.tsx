@@ -12,7 +12,6 @@ import {
   Palette,
   Heart,
   PartyPopper,
-  Flame,
   Volume2,
 } from "lucide-react";
 import { showToast } from "./Toast";
@@ -90,6 +89,15 @@ export const PACKED_FURNITURE_LIST: FurnitureItem[] = [
     icon: "🐶",
   },
   {
+    id: "pet_cat",
+    name: "식빵 굽는 치즈 고양이",
+    category: "character",
+    badge: "CAT",
+    gradient: "from-orange-400/20 to-amber-400/20",
+    iconBg: "bg-gradient-to-tr from-orange-500 to-amber-400 text-white",
+    icon: "🐱",
+  },
+  {
     id: "minimi_surf",
     name: "서핑 타는 서퍼 미니미",
     category: "character",
@@ -104,7 +112,7 @@ export const PACKED_FURNITURE_LIST: FurnitureItem[] = [
     id: "grand_piano",
     name: "클래식 그랜드 피아노",
     category: "furniture",
-    badge: "LUXURY",
+    badge: "PIANO",
     gradient: "from-slate-600/20 to-zinc-800/20",
     iconBg: "bg-gradient-to-tr from-zinc-800 to-slate-700 text-white",
     icon: "🎼",
@@ -194,26 +202,35 @@ export const PACKED_FURNITURE_LIST: FurnitureItem[] = [
   },
 ];
 
-// 싸이월드처럼 꽉 찬 프리셋 데이터 (Packed Preset)
-const FULLY_PACKED_PRESET: PlacedFurniture[] = [
-  // Party & Living
-  { id: "grand_piano", x: 1, y: 1, bubble: "쇼팽 녹턴 연주 중 🎶" },
-  { id: "minimi_piano", x: 1, y: 2 },
-  { id: "party_table", x: 0, y: 4, bubble: "맛있는 음식 가득! 🍷" },
-  { id: "minimi_me", x: 2, y: 4, bubble: "온룸에 오신 걸 환영해요! 🌸" },
-  { id: "minimi_cheer", x: 3, y: 4, bubble: "다 같이 짠~ 건배! 🥂" },
-  { id: "cake_table", x: 5, y: 1, bubble: "생일 축하합니다! 🎂" },
-  { id: "minimi_guitar", x: 6, y: 1, bubble: "기타 솔로 연주 🎸" },
-  { id: "pet_dog", x: 3, y: 6, bubble: "멍멍! 반가워요 꼬리 붕붕 🐾" },
-  { id: "sofa", x: 4, y: 3 },
-  { id: "turntable", x: 6, y: 3 },
+// 화면 외곽(빨간 부분)까지 꽉 채운 12x12 풀 스케일 프리셋
+const FULL_CANVAS_PACKED_PRESET: PlacedFurniture[] = [
+  // 1. Back wall & Upper Terrace
   { id: "lamp", x: 0, y: 1 },
-  { id: "plant", x: 2, y: 0 },
-  { id: "plant", x: 4, y: 0 },
-  { id: "mac", x: 6, y: 5 },
   { id: "poster", x: 0, y: 3 },
-  { id: "beach_set", x: 6, y: 7 },
-  { id: "minimi_surf", x: 7, y: 7, bubble: "파도타기 최고! 🏄‍♂️" },
+  { id: "plant", x: 3, y: 0 },
+  { id: "plant", x: 6, y: 0 },
+  { id: "grand_piano", x: 2, y: 2, bubble: "쇼팽 녹턴 연주 중 🎶" },
+  { id: "minimi_piano", x: 2, y: 3 },
+  { id: "cake_table", x: 8, y: 1, bubble: "생일 축하해요! 🎂" },
+
+  // 2. Left Edge (빨간색 왼쪽 영역)
+  { id: "party_table", x: 0, y: 6, bubble: "와인과 만찬 파티! 🍷" },
+  { id: "minimi_cheer", x: 1, y: 7, bubble: "짠~ 건배! 🥂" },
+  { id: "pet_cat", x: 0, y: 9, bubble: "야옹~ 식빵 굽는 중 🐱" },
+
+  // 3. Center Living & Deck
+  { id: "minimi_me", x: 5, y: 5, bubble: "온룸에 오신 걸 환영해요! 🌸" },
+  { id: "sofa", x: 6, y: 4 },
+  { id: "turntable", x: 8, y: 3 },
+  { id: "minimi_guitar", x: 8, y: 5, bubble: "통기타 어쿠스틱 라이브 🎸" },
+  { id: "pet_dog", x: 4, y: 8, bubble: "멍멍! 반가워요 꼬리 붕붕 🐾" },
+
+  // 4. Right & Bottom Beach Shore (빨간색 오른쪽 및 하단 영역)
+  { id: "mac", x: 10, y: 4 },
+  { id: "beach_set", x: 9, y: 9 },
+  { id: "minimi_surf", x: 11, y: 8, bubble: "파도타기 최고! 🏄‍♂️" },
+  { id: "beach_set", x: 7, y: 11 },
+  { id: "minimi_me", x: 4, y: 11, bubble: "앞마당 산책로 🌿" },
 ];
 
 export default function InteractiveSandbox({
@@ -227,16 +244,11 @@ export default function InteractiveSandbox({
   const [selectedFurniture, setSelectedFurniture] = useState("minimi_me");
   const [activeCategory, setActiveCategory] = useState<"all" | "character" | "furniture" | "decor">("all");
   const [hoverTile, setHoverTile] = useState<{ gx: number; gy: number } | null>(null);
-  const [activeSpeechBubble, setActiveSpeechBubble] = useState<{ x: number; y: number; text: string } | null>({
-    x: 480,
-    y: 280,
-    text: "싸이월드처럼 왁자지껄 꽉 찬 미니룸에 오신 것을 환영합니다! 🌸",
-  });
 
-  // Large Cyworld Grid: 8x8 with 76x38 tiles
-  const TILE_W = 76;
-  const TILE_H = 38;
-  const GRID_SIZE = 8;
+  // FULL-SCREEN EDGE-TO-EDGE CYWORLD GEOMETRY (12x12 Grid covering the entire canvas)
+  const TILE_W = 86;
+  const TILE_H = 43;
+  const GRID_SIZE = 12;
 
   const gridToIso = (gx: number, gy: number, ox: number, oy: number) => ({
     x: ox + (gx - gy) * (TILE_W / 2),
@@ -258,47 +270,61 @@ export default function InteractiveSandbox({
     if (!ctx) return;
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-    const ox = canvas.width / 2;
-    const oy = canvas.height / 2 - 80;
+    const w = canvas.width;
+    const h = canvas.height;
+
+    // Origin positioned so the room diamond covers the entire rectangle from edge to edge
+    const ox = w / 2;
+    const oy = 120; // Top corner near the upper boundary
 
     const topCorner = gridToIso(0, 0, ox, oy);
     const leftCorner = gridToIso(0, GRID_SIZE, ox, oy);
     const rightCorner = gridToIso(GRID_SIZE, 0, ox, oy);
     const bottomCorner = gridToIso(GRID_SIZE, GRID_SIZE, ox, oy);
-    const wallH = 185;
+    const wallH = 120;
 
-    // 1. Ambient Wall Depth
-    ctx.save();
-    ctx.shadowColor = "rgba(43, 48, 68, 0.15)";
-    ctx.shadowBlur = 40;
-    ctx.shadowOffsetY = 18;
+    // 0. Fill the entire canvas background with room ambient tones (no empty border!)
+    const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+    if (currentMood === "sunset") {
+      bgGrad.addColorStop(0, "#F2D8D3");
+      bgGrad.addColorStop(1, "#E8C8B8");
+    } else if (currentMood === "dawn") {
+      bgGrad.addColorStop(0, "#191E2C");
+      bgGrad.addColorStop(1, "#121520");
+    } else {
+      bgGrad.addColorStop(0, "#F4F0E6");
+      bgGrad.addColorStop(1, "#E8E2D2");
+    }
+    ctx.fillStyle = bgGrad;
+    ctx.fillRect(0, 0, w, h);
 
-    // Left Wall (Warm Living Wall)
+    // 1. Left Wall (Spanning from (0,0) down to leftCorner)
     ctx.fillStyle = currentMood === "dawn" ? "#222738" : currentMood === "sunset" ? "#E8D0CD" : "#EBE6DB";
     ctx.beginPath();
     ctx.moveTo(topCorner.x, topCorner.y);
     ctx.lineTo(leftCorner.x, leftCorner.y);
-    ctx.lineTo(leftCorner.x, leftCorner.y - wallH);
-    ctx.lineTo(topCorner.x, topCorner.y - wallH);
+    ctx.lineTo(0, leftCorner.y);
+    ctx.lineTo(0, 0);
+    ctx.lineTo(topCorner.x, 0);
     ctx.closePath();
     ctx.fill();
 
-    // Right Wall (Sunroom / Terrace Wall with large Glass Doors)
+    // 2. Right Wall (Spanning from (w,0) down to rightCorner)
     ctx.fillStyle = currentMood === "dawn" ? "#2C3247" : currentMood === "sunset" ? "#F5DDD8" : "#F6F2E8";
     ctx.beginPath();
     ctx.moveTo(topCorner.x, topCorner.y);
     ctx.lineTo(rightCorner.x, rightCorner.y);
-    ctx.lineTo(rightCorner.x, rightCorner.y - wallH);
-    ctx.lineTo(topCorner.x, topCorner.y - wallH);
+    ctx.lineTo(w, rightCorner.y);
+    ctx.lineTo(w, 0);
+    ctx.lineTo(topCorner.x, 0);
     ctx.closePath();
     ctx.fill();
-    ctx.restore();
 
-    // 2. Left Wall Scenic Big Window (Cyworld Iconic Glass Window)
-    const winX = topCorner.x - 190;
-    const winY = topCorner.y - 150;
-    const winW = 100;
-    const winH = 115;
+    // 3. Scenic Big Panoramic Glass Window on Left Wall
+    const winX = 140;
+    const winY = 15;
+    const winW = 180;
+    const winH = 95;
 
     const skyGrad = ctx.createLinearGradient(winX, winY, winX, winY + winH);
     if (currentMood === "sunset") {
@@ -321,25 +347,25 @@ export default function InteractiveSandbox({
     if (currentMood === "dawn") {
       ctx.fillStyle = "#FEF08A";
       ctx.beginPath();
-      ctx.arc(winX + 28, winY + 34, 10, 0, Math.PI * 2);
+      ctx.arc(winX + 45, winY + 30, 10, 0, Math.PI * 2);
       ctx.fill();
     } else if (currentMood === "sunset") {
       ctx.fillStyle = "#EF4444";
       ctx.beginPath();
-      ctx.arc(winX + 55, winY + 75, 20, 0, Math.PI * 2);
+      ctx.arc(winX + 90, winY + 65, 20, 0, Math.PI * 2);
       ctx.fill();
     } else {
       ctx.fillStyle = "#FACC15";
       ctx.beginPath();
-      ctx.arc(winX + 55, winY + 35, 14, 0, Math.PI * 2);
+      ctx.arc(winX + 90, winY + 32, 14, 0, Math.PI * 2);
       ctx.fill();
     }
 
     // White Window Trim
     ctx.strokeStyle = "#FFFFFF";
-    ctx.lineWidth = 6;
+    ctx.lineWidth = 5;
     ctx.strokeRect(winX, winY, winW, winH);
-    ctx.lineWidth = 3;
+    ctx.lineWidth = 2.5;
     ctx.beginPath();
     ctx.moveTo(winX + winW / 2, winY);
     ctx.lineTo(winX + winW / 2, winY + winH);
@@ -347,11 +373,11 @@ export default function InteractiveSandbox({
     ctx.lineTo(winX + winW, winY + winH / 2);
     ctx.stroke();
 
-    // 3. Right Terrace Glass Door (Overlooking beach / garden)
-    const doorX = topCorner.x + 40;
-    const doorY = topCorner.y - 145;
-    const doorW = 120;
-    const doorH = 135;
+    // 4. Right Wall Sliding Glass Doors overlooking terrace
+    const doorX = 640;
+    const doorY = 15;
+    const doorW = 220;
+    const doorH = 100;
     ctx.fillStyle = "rgba(255, 255, 255, 0.4)";
     ctx.fillRect(doorX, doorY, doorW, doorH);
     ctx.strokeStyle = "#FFFFFF";
@@ -362,14 +388,22 @@ export default function InteractiveSandbox({
     ctx.lineTo(doorX + doorW / 2, doorY + doorH);
     ctx.stroke();
 
-    // 4. Floor: Dual Zone (Terrace Wooden Deck + Beach Sandy Shore on bottom right!)
+    // 5. Baseboard molding line
+    ctx.strokeStyle = currentMood === "dawn" ? "#1A1D2B" : "#D4CEC0";
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(0, leftCorner.y);
+    ctx.lineTo(topCorner.x, topCorner.y);
+    ctx.lineTo(w, rightCorner.y);
+    ctx.stroke();
+
+    // 6. Complete 12x12 Edge-to-Edge Floor Grid
     for (let x = 0; x < GRID_SIZE; x++) {
       for (let y = 0; y < GRID_SIZE; y++) {
         const pt = gridToIso(x, y, ox, oy);
-        const isBeachZone = x >= 6 && y >= 6; // Cyworld seaside beach extension!
+        const isBeachZone = x >= 8 && y >= 6; // Right & bottom sandy beach area!
 
         if (isBeachZone) {
-          // Sandy beach with sparkling foam
           ctx.fillStyle = currentMood === "dawn" ? "#5C5642" : currentMood === "sunset" ? "#EAD3B3" : "#F4DCB7";
         } else {
           // Warm Parquet Oak Wood Terrace
@@ -383,9 +417,9 @@ export default function InteractiveSandbox({
           }
         }
 
-        // Hover Glow
+        // Hover highlight
         if (hoverTile && hoverTile.gx === x && hoverTile.gy === y) {
-          ctx.fillStyle = "rgba(255, 107, 87, 0.55)";
+          ctx.fillStyle = "rgba(255, 107, 87, 0.6)";
         }
 
         ctx.beginPath();
@@ -402,15 +436,14 @@ export default function InteractiveSandbox({
       }
     }
 
-    // 5. Draw All Packed Objects with Depth Sorting
+    // 7. Depth-Sorted Object Drawing
     const sorted = [...placedItems].sort((a, b) => a.x + a.y - (b.x + b.y));
     sorted.forEach((item) => {
-      drawPackedObject(ctx, item.id, item.x, item.y, ox, oy, item.bubble);
+      drawFullObject(ctx, item.id, item.x, item.y, ox, oy, item.bubble);
     });
   };
 
-  // Rendering packed Cyworld items (Minimi characters, Grand Piano, Party Feasts, Pets)
-  const drawPackedObject = (
+  const drawFullObject = (
     ctx: CanvasRenderingContext2D,
     id: string,
     gx: number,
@@ -433,38 +466,31 @@ export default function InteractiveSandbox({
     ctx.fill();
 
     switch (id) {
-      // 1. Minimi Me (주인공 코비 미니미)
       case "minimi_me":
-        // Body / Red Sweater
         ctx.fillStyle = "#E11D48";
         ctx.beginPath();
         ctx.roundRect(-8, -26, 16, 20, 4);
         ctx.fill();
-        // Denim Jeans & Shoes
         ctx.fillStyle = "#2563EB";
         ctx.fillRect(-6, -6, 5, 8);
         ctx.fillRect(1, -6, 5, 8);
         ctx.fillStyle = "#1E293B";
         ctx.fillRect(-7, 2, 6, 4);
         ctx.fillRect(1, 2, 6, 4);
-        // Face & Hair
         ctx.fillStyle = "#FCD34D";
         ctx.beginPath();
         ctx.arc(0, -34, 11, 0, Math.PI * 2);
         ctx.fill();
-        // Cyworld iconic black hair
         ctx.fillStyle = "#1E293B";
         ctx.beginPath();
         ctx.arc(0, -36, 11.5, Math.PI * 0.9, Math.PI * 2.1);
         ctx.fill();
-        // Waving Hand
         ctx.fillStyle = "#FCD34D";
         ctx.beginPath();
         ctx.arc(10, -28, 3.5, 0, Math.PI * 2);
         ctx.fill();
         break;
 
-      // 2. Guitar Minimi
       case "minimi_guitar":
         ctx.fillStyle = "#0284C7";
         ctx.beginPath();
@@ -481,7 +507,6 @@ export default function InteractiveSandbox({
         ctx.beginPath();
         ctx.arc(0, -35, 10.5, Math.PI * 0.9, Math.PI * 2.1);
         ctx.fill();
-        // Acoustic Guitar
         ctx.fillStyle = "#D97706";
         ctx.beginPath();
         ctx.ellipse(5, -18, 9, 6, 0.4, 0, Math.PI * 2);
@@ -494,7 +519,6 @@ export default function InteractiveSandbox({
         ctx.stroke();
         break;
 
-      // 3. Piano Minimi
       case "minimi_piano":
         ctx.fillStyle = "#059669";
         ctx.beginPath();
@@ -510,9 +534,7 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 4. Friends Cheering (2 Minimis)
       case "minimi_cheer":
-        // Friend 1
         ctx.fillStyle = "#4F46E5";
         ctx.beginPath();
         ctx.roundRect(-16, -24, 13, 18, 4);
@@ -521,7 +543,6 @@ export default function InteractiveSandbox({
         ctx.beginPath();
         ctx.arc(-10, -32, 9, 0, Math.PI * 2);
         ctx.fill();
-        // Friend 2
         ctx.fillStyle = "#D946EF";
         ctx.beginPath();
         ctx.roundRect(3, -24, 13, 18, 4);
@@ -530,14 +551,12 @@ export default function InteractiveSandbox({
         ctx.beginPath();
         ctx.arc(9, -32, 9, 0, Math.PI * 2);
         ctx.fill();
-        // Beer Mugs / Toast
         ctx.fillStyle = "#FBBF24";
         ctx.fillRect(-3, -22, 6, 7);
         ctx.fillStyle = "#FFFFFF";
         ctx.fillRect(-3, -24, 6, 3);
         break;
 
-      // 5. Dog (흰둥이 강아지)
       case "pet_dog":
         ctx.fillStyle = "#FFFFFF";
         ctx.beginPath();
@@ -546,13 +565,11 @@ export default function InteractiveSandbox({
         ctx.beginPath();
         ctx.arc(-11, -16, 7, 0, Math.PI * 2);
         ctx.fill();
-        // Ears & Nose
         ctx.fillStyle = "#1E293B";
         ctx.beginPath();
         ctx.arc(-15, -19, 3, 0, Math.PI * 2);
         ctx.arc(-17, -14, 2, 0, Math.PI * 2);
         ctx.fill();
-        // Wagging Tail
         ctx.strokeStyle = "#FFFFFF";
         ctx.lineWidth = 3;
         ctx.beginPath();
@@ -561,20 +578,28 @@ export default function InteractiveSandbox({
         ctx.stroke();
         break;
 
-      // 6. Surfer Minimi
+      case "pet_cat":
+        ctx.fillStyle = "#F59E0B";
+        ctx.beginPath();
+        ctx.roundRect(-9, -12, 18, 11, 4);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(-9, -14, 6, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = "#FFFFFF";
+        ctx.fillRect(-6, -6, 12, 5);
+        break;
+
       case "minimi_surf":
-        // Surfboard
         ctx.fillStyle = "#F43F5E";
         ctx.beginPath();
         ctx.ellipse(0, 0, 24, 7, 0.2, 0, Math.PI * 2);
         ctx.fill();
-        // Sea waves splash
         ctx.strokeStyle = "#38BDF8";
         ctx.lineWidth = 2.5;
         ctx.beginPath();
         ctx.arc(-6, 2, 12, 0, Math.PI);
         ctx.stroke();
-        // Surfer body
         ctx.fillStyle = "#EA580C";
         ctx.beginPath();
         ctx.roundRect(-6, -26, 12, 18, 3);
@@ -585,59 +610,49 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 7. Grand Piano
       case "grand_piano":
         ctx.fillStyle = "#0F172A";
         ctx.beginPath();
         ctx.roundRect(-36, -45, 72, 45, 10);
         ctx.fill();
-        // Gold Brand Stamp
         ctx.fillStyle = "#FCD34D";
         ctx.fillRect(-10, -42, 20, 2);
-        // Piano Keys (Black & White)
         ctx.fillStyle = "#FFFFFF";
         ctx.fillRect(-28, -20, 56, 12);
         ctx.fillStyle = "#000000";
         for (let k = -24; k < 24; k += 6) {
           ctx.fillRect(k, -20, 4, 7);
         }
-        // Piano Stand legs
         ctx.fillStyle = "#0F172A";
         ctx.fillRect(-32, -4, 5, 8);
         ctx.fillRect(27, -4, 5, 8);
         break;
 
-      // 8. Party Feast Dining Table
       case "party_table":
-        // Wooden Long Table
         ctx.fillStyle = "#78350F";
         ctx.beginPath();
         ctx.roundRect(-42, -26, 84, 28, 6);
         ctx.fill();
-        // White Linen Tablecloth
         ctx.fillStyle = "#FFFFFF";
         ctx.beginPath();
         ctx.roundRect(-40, -28, 80, 24, 4);
         ctx.fill();
-        // Feast items: Wine bottle, plates, bread, glasses
         ctx.fillStyle = "#059669";
-        ctx.fillRect(-28, -38, 5, 12); // Wine bottle
+        ctx.fillRect(-28, -38, 5, 12);
         ctx.fillStyle = "#EF4444";
         ctx.beginPath();
-        ctx.arc(-14, -22, 6, 0, Math.PI * 2); // Dish
+        ctx.arc(-14, -22, 6, 0, Math.PI * 2);
         ctx.arc(14, -22, 6, 0, Math.PI * 2);
         ctx.fill();
         ctx.fillStyle = "#D97706";
-        ctx.fillRect(-2, -24, 10, 4); // Bread
+        ctx.fillRect(-2, -24, 10, 4);
         break;
 
-      // 9. Cake Table
       case "cake_table":
         ctx.fillStyle = "#FEF3C7";
         ctx.beginPath();
         ctx.ellipse(0, -10, 26, 14, 0, 0, Math.PI * 2);
         ctx.fill();
-        // Birthday Cake with Candle
         ctx.fillStyle = "#F472B6";
         ctx.beginPath();
         ctx.roundRect(-14, -24, 28, 15, 6);
@@ -646,7 +661,6 @@ export default function InteractiveSandbox({
         ctx.beginPath();
         ctx.ellipse(0, -24, 14, 7, 0, 0, Math.PI * 2);
         ctx.fill();
-        // Candle & Flame
         ctx.fillStyle = "#FCD34D";
         ctx.fillRect(-1.5, -34, 3, 10);
         ctx.fillStyle = "#EF4444";
@@ -655,7 +669,6 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 10. Lounge Sofa
       case "sofa":
         ctx.fillStyle = "#738C82";
         ctx.beginPath();
@@ -671,7 +684,6 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 11. Turntable
       case "turntable":
         ctx.fillStyle = "#6B4226";
         ctx.beginPath();
@@ -687,7 +699,6 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 12. Floor Lamp
       case "lamp":
         ctx.fillStyle = "rgba(254, 229, 137, 0.35)";
         ctx.beginPath();
@@ -701,7 +712,6 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 13. Plant
       case "plant":
         ctx.fillStyle = "#E7D6C4";
         ctx.beginPath();
@@ -715,7 +725,6 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 14. Macintosh
       case "mac":
         ctx.fillStyle = "#E6E2D8";
         ctx.beginPath();
@@ -727,7 +736,6 @@ export default function InteractiveSandbox({
         ctx.fillRect(-7, -24, 7, 2);
         break;
 
-      // 15. Bauhaus Poster
       case "poster":
         ctx.fillStyle = "#18181B";
         ctx.beginPath();
@@ -741,7 +749,6 @@ export default function InteractiveSandbox({
         ctx.fill();
         break;
 
-      // 16. Beach Sandcastle & Shells
       case "beach_set":
         ctx.fillStyle = "#EAB308";
         ctx.beginPath();
@@ -749,24 +756,23 @@ export default function InteractiveSandbox({
         ctx.fill();
         ctx.fillStyle = "#F43F5E";
         ctx.beginPath();
-        ctx.arc(8, -4, 4, 0, Math.PI * 2); // Starfish
+        ctx.arc(8, -4, 4, 0, Math.PI * 2);
         ctx.fill();
         break;
     }
 
-    // Cyworld Speech Bubble above character
+    // Speech bubble
     if (bubbleText) {
       ctx.save();
       ctx.fillStyle = "#FFFFFF";
       ctx.strokeStyle = "#2B3044";
       ctx.lineWidth = 1.5;
-      const textW = Math.min(160, ctx.measureText(bubbleText).width + 18);
+      const textW = Math.min(180, ctx.measureText(bubbleText).width + 20);
       ctx.beginPath();
       ctx.roundRect(-textW / 2, -68, textW, 22, 6);
       ctx.fill();
       ctx.stroke();
 
-      // Tail
       ctx.beginPath();
       ctx.moveTo(-4, -46);
       ctx.lineTo(0, -40);
@@ -775,9 +781,8 @@ export default function InteractiveSandbox({
       ctx.fill();
       ctx.stroke();
 
-      // Text
       ctx.fillStyle = "#2B3044";
-      ctx.font = "bold 10px sans-serif";
+      ctx.font = "bold 10.5px sans-serif";
       ctx.textAlign = "center";
       ctx.fillText(bubbleText, 0, -53);
       ctx.restore();
@@ -804,7 +809,7 @@ export default function InteractiveSandbox({
     const py = (clientY - rect.top) * scaleY;
 
     const ox = canvas.width / 2;
-    const oy = canvas.height / 2 - 80;
+    const oy = 120;
     const { gx, gy } = isoToGrid(px, py, ox, oy);
 
     if (gx >= 0 && gx < GRID_SIZE && gy >= 0 && gy < GRID_SIZE) {
@@ -827,6 +832,7 @@ export default function InteractiveSandbox({
         minimi_piano: "피아노 즉흥곡 들려줄게 🎹",
         minimi_cheer: "축하해! 다 같이 짠~ 🥂",
         pet_dog: "멍멍! 꼬리 살랑살랑 🐾",
+        pet_cat: "야옹~ 햇볕 쬐는 중 🐱",
         minimi_surf: "바다 파도타기 최고야 🌊",
         party_table: "와인이랑 맛있는 파티 만찬 🍷",
         cake_table: "소원을 빌어봐! 🎂",
@@ -849,22 +855,20 @@ export default function InteractiveSandbox({
     showToast("새로운 오브제가 배치되었습니다!");
   };
 
-  // Preset 1: Cyworld Packed Party Full Pack
   const loadFullPartyPreset = () => {
-    setPlacedItems(FULLY_PACKED_PRESET);
-    showToast("🎉 싸이월드 감성 왁자지껄 꽉 찬 파티룸이 로드되었습니다!");
+    setPlacedItems(FULL_CANVAS_PACKED_PRESET);
+    showToast("🎉 빨간 외곽선까지 꽉 찬 대형 파티룸이 로드되었습니다!");
   };
 
-  // Preset 2: Cozy Lo-Fi Room
   const loadCozyPreset = () => {
     setPlacedItems([
       { id: "lamp", x: 1, y: 1 },
-      { id: "sofa", x: 2, y: 4 },
-      { id: "turntable", x: 4, y: 2 },
-      { id: "minimi_me", x: 3, y: 4, bubble: "조용히 LP 음악 듣는 중 🎧" },
-      { id: "pet_dog", x: 4, y: 5 },
-      { id: "plant", x: 6, y: 6 },
-      { id: "mac", x: 5, y: 3 },
+      { id: "sofa", x: 4, y: 4 },
+      { id: "turntable", x: 6, y: 3 },
+      { id: "minimi_me", x: 5, y: 5, bubble: "조용히 LP 음악 듣는 중 🎧" },
+      { id: "pet_dog", x: 5, y: 7 },
+      { id: "plant", x: 8, y: 2 },
+      { id: "mac", x: 9, y: 5 },
       { id: "poster", x: 0, y: 3 },
     ]);
     showToast("☕ 아늑한 새벽 Lo-Fi 작업실 모드!");
@@ -881,33 +885,32 @@ export default function InteractiveSandbox({
       : PACKED_FURNITURE_LIST.filter((item) => item.category === activeCategory);
 
   return (
-    <section id="sandbox" className="py-14 sm:py-20 max-w-7xl mx-auto px-4 sm:px-6">
+    <section id="sandbox" className="py-12 sm:py-18 max-w-7xl mx-auto px-4 sm:px-6">
       {/* Header */}
-      <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
+      <div className="text-center max-w-3xl mx-auto mb-8">
         <div className="inline-flex items-center gap-2 bg-white/90 backdrop-blur-md border border-white/80 rounded-full px-4 py-1.5 shadow-sm text-xs font-extrabold text-[#2B3044] mb-3">
           <PartyPopper className="w-3.5 h-3.5 text-[#FF6B57]" />
-          <span>CYWORLD MINIROOM REBORN • 꽉 찬 인터랙티브 룸</span>
+          <span>CYWORLD MINIROOM REBORN • 화면을 꽉 채우는 12×12 풀 스케일</span>
         </div>
         <h2 className="text-2xl sm:text-5xl font-extrabold text-[#2B3044] tracking-tight mb-3">
-          미니미와 가구로 꽉 채우는 대형 미니룸
+          외곽 끝까지 꽉 차는 대형 미니룸 스튜디오
         </h2>
         <p className="text-[#676D82] text-sm sm:text-base leading-relaxed">
-          피아노 연주, 파티 만찬, 서핑하는 미니미와 댕댕이까지! 왁자지껄 생동감 넘치는 나만의 공간을 만들어보세요.
+          화면 좌우/하단 끝까지 빈틈없이 타일이 채워져, 그랜드 피아노부터 파티 만찬, 해변 서핑까지 넓게 꾸밀 수 있습니다.
         </p>
       </div>
 
-      {/* Main Big Cyworld Stage Card */}
-      <div className="bg-white/85 backdrop-blur-2xl border border-white/80 rounded-[36px] p-5 sm:p-10 shadow-[0_20px_60px_rgba(43,48,68,0.08)]">
-        {/* Top Controls & Preset Toolbar */}
-        <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
-          {/* Preset Buttons */}
+      {/* Main Full-Scale Cyworld Stage Card */}
+      <div className="bg-white/85 backdrop-blur-2xl border border-white/80 rounded-[36px] p-4 sm:p-8 shadow-[0_20px_60px_rgba(43,48,68,0.08)]">
+        {/* Top Controls Toolbar */}
+        <div className="flex flex-wrap items-center justify-between gap-4 mb-5">
           <div className="flex flex-wrap items-center gap-2">
             <button
               onClick={loadFullPartyPreset}
-              className="bg-gradient-to-r from-[#FF6B57] to-[#E85542] hover:brightness-105 text-white text-xs font-extrabold px-4.5 py-2.5 rounded-full shadow-[0_4px_16px_rgba(255,107,87,0.35)] transition-all flex items-center gap-1.5 transform active:scale-95"
+              className="bg-gradient-to-r from-[#FF6B57] to-[#E85542] hover:brightness-105 text-white text-xs font-extrabold px-5 py-2.5 rounded-full shadow-[0_4px_16px_rgba(255,107,87,0.35)] transition-all flex items-center gap-1.5 transform active:scale-95"
             >
               <PartyPopper className="w-3.5 h-3.5 text-[#FEE589]" />
-              <span>🎉 꽉 찬 파티룸 보기 (추천)</span>
+              <span>🎉 외곽까지 꽉 찬 파티룸 보기 (추천)</span>
             </button>
             <button
               onClick={loadCozyPreset}
@@ -918,6 +921,7 @@ export default function InteractiveSandbox({
             <button
               onClick={handleReset}
               className="bg-white hover:bg-neutral-50 border border-[#2B3044]/10 text-xs font-bold text-[#676D82] px-3.5 py-2.5 rounded-full transition-colors"
+              title="비우기"
             >
               <RotateCcw className="w-3 h-3" />
             </button>
@@ -964,8 +968,8 @@ export default function InteractiveSandbox({
           </div>
         </div>
 
-        {/* EXPANSIVE 1000x640 CYWORLD MINIROOM STAGE */}
-        <div className="relative w-full h-[480px] sm:h-[640px] bg-gradient-to-br from-[#FAF8F5] via-[#EDE7DB] to-[#E3DCCF] rounded-3xl overflow-hidden shadow-inner flex items-center justify-center touch-none border border-black/5">
+        {/* EDGE-TO-EDGE FULL 1000x640 STAGE (No wasted border gap!) */}
+        <div className="relative w-full h-[520px] sm:h-[640px] rounded-3xl overflow-hidden shadow-inner flex items-center justify-center touch-none border border-black/10">
           <canvas
             ref={canvasRef}
             width={1000}
@@ -978,24 +982,23 @@ export default function InteractiveSandbox({
             className="w-full h-full block cursor-grab active:cursor-grabbing"
           />
 
-          {/* Top Cyworld Status Bar */}
-          <div className="absolute top-4 left-4 bg-white/85 backdrop-blur-md border border-white/70 text-[#2B3044] text-[11px] font-bold px-3.5 py-1.5 rounded-full shadow-sm flex items-center gap-2 pointer-events-none">
+          {/* Top Status */}
+          <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-md border border-white/70 text-[#2B3044] text-[11px] font-bold px-3.5 py-1.5 rounded-full shadow-sm flex items-center gap-2 pointer-events-none">
             <span className="w-2 h-2 rounded-full bg-rose-500 animate-pulse"></span>
-            <span>TODAY: 221명 방문 중 • 미니미를 클릭하면 말풍선이 뜹니다!</span>
+            <span>12×12 풀 스케일 룸 • 미니미를 클릭하면 말풍선 인터랙션!</span>
           </div>
 
           <div className="absolute bottom-4 right-4 bg-[#2B3044]/80 backdrop-blur-md text-white text-[10px] font-mono px-3 py-1 rounded-full pointer-events-none">
-            CYWORLD MINIROOM 1000×640
+            EDGE-TO-EDGE MINIROOM
           </div>
         </div>
 
-        {/* Toss & Apple Style Categorized Object Dock */}
+        {/* Categorized Object Dock */}
         <div className="mt-8">
-          {/* Category Tabs */}
           <div className="flex items-center justify-between gap-4 mb-4 overflow-x-auto pb-1">
             <div className="flex items-center bg-[#2B3044]/5 p-1 rounded-2xl">
               {[
-                { id: "all", label: "전체 오브제 (16)" },
+                { id: "all", label: "전체 오브제 (17)" },
                 { id: "character", label: "👥 미니미 & 펫" },
                 { id: "furniture", label: "🛋️ 파티 & 가구" },
                 { id: "decor", label: "🌿 조명 & 소품" },
@@ -1015,11 +1018,11 @@ export default function InteractiveSandbox({
             </div>
 
             <span className="text-[11px] text-[#676D82] hidden sm:inline font-medium">
-              선택 후 룸 타일을 누르면 배치됩니다
+              외곽 끝 타일까지 자유롭게 배치할 수 있습니다
             </span>
           </div>
 
-          {/* SQUIRCLE CARDS GRID */}
+          {/* Squircle Cards Grid */}
           <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5 sm:gap-3">
             {filteredFurniture.map((item) => {
               const isSelected = selectedFurniture === item.id;
@@ -1036,7 +1039,6 @@ export default function InteractiveSandbox({
                       : "bg-[#FAFAFA] hover:bg-white border-[#2B3044]/8 hover:border-[#2B3044]/20 shadow-xs"
                   }`}
                 >
-                  {/* Apple Squircle Icon Box */}
                   <div
                     className={`w-11 h-11 rounded-2xl flex items-center justify-center text-xl mb-2 shadow-sm transition-transform ${
                       item.iconBg
@@ -1062,10 +1064,10 @@ export default function InteractiveSandbox({
         <div className="mt-8 bg-gradient-to-r from-[#FFF6F3] to-[#FFF0EC] border border-[#FF6B57]/25 rounded-2xl p-5 sm:p-7 flex flex-col sm:flex-row items-center justify-between gap-5">
           <div className="text-center sm:text-left">
             <h4 className="text-base sm:text-lg font-extrabold text-[#2B3044]">
-              ✨ 꽉 찬 나만의 미니룸 그대로 입주 신청하기
+              ✨ 꽉 찬 대형 미니룸 그대로 입주 신청하기
             </h4>
             <p className="text-xs sm:text-sm text-[#676D82] mt-1">
-              미니미 캐릭터와 가구 배치가 저장되어 정식 런칭 시 그대로 생성됩니다.
+              외곽 끝까지 배치한 모든 가구와 미니미가 저장되어 정식 런칭 시 그대로 생성됩니다.
             </p>
           </div>
           <button
