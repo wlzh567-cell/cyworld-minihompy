@@ -13,7 +13,7 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [lightOn, setLightOn] = useState(true);
 
-  // Draw Hero 2.5D Isometric Room Canvas
+  // Draw Hero 2.5D Isometric Room Canvas (Cyworld Scale)
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -28,13 +28,13 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
       const w = canvas.width;
       const h = canvas.height;
       const ox = w / 2;
-      const oy = h / 2 - 30 + Math.sin(angle) * 6; // gentle levitation
+      const oy = h / 2 - 45 + Math.sin(angle) * 7; // gentle levitation
 
-      // Isometric Walls
-      const wallHeight = 110;
-      const tileW = 50;
-      const tileH = 25;
-      const size = 6;
+      // Isometric Walls (High-ceiling Cyworld Miniroom)
+      const wallHeight = 150;
+      const tileW = 58;
+      const tileH = 29;
+      const size = 7;
 
       // Projection
       const topX = ox;
@@ -43,11 +43,9 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
       const leftY = oy + (size * tileH) / 2;
       const rightX = ox + (size * tileW) / 2;
       const rightY = oy + (size * tileH) / 2;
-      const botX = ox;
-      const botY = oy + size * tileH;
 
       // Left Wall
-      ctx.fillStyle = "#EAE6DB";
+      ctx.fillStyle = "#EAE6DC";
       ctx.beginPath();
       ctx.moveTo(topX, topY);
       ctx.lineTo(leftX, leftY);
@@ -57,7 +55,7 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
       ctx.fill();
 
       // Right Wall
-      ctx.fillStyle = "#F4F0E6";
+      ctx.fillStyle = "#F5F1E6";
       ctx.beginPath();
       ctx.moveTo(topX, topY);
       ctx.lineTo(rightX, rightY);
@@ -66,21 +64,55 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
       ctx.closePath();
       ctx.fill();
 
-      // Wall Poster
-      ctx.fillStyle = "#FF6B57";
-      ctx.fillRect(topX + 18, topY - 80, 32, 42);
-      ctx.fillStyle = "#FEE589";
+      // Baseboard Molding
+      ctx.fillStyle = "#D7D1C2";
       ctx.beginPath();
-      ctx.arc(topX + 34, topY - 58, 8, 0, Math.PI * 2);
+      ctx.moveTo(topX, topY);
+      ctx.lineTo(leftX, leftY);
+      ctx.lineTo(leftX, leftY - 8);
+      ctx.lineTo(topX, topY - 8);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = "#E1DBD0";
+      ctx.beginPath();
+      ctx.moveTo(topX, topY);
+      ctx.lineTo(rightX, rightY);
+      ctx.lineTo(rightX, rightY - 8);
+      ctx.lineTo(topX, topY - 8);
+      ctx.closePath();
       ctx.fill();
 
-      // Floor Grid
+      // Scenic Sky Window on Left Wall
+      const winX = topX - 110;
+      const winY = topY - 120;
+      const winW = 55;
+      const winH = 75;
+
+      const skyGrad = ctx.createLinearGradient(winX, winY, winX, winY + winH);
+      skyGrad.addColorStop(0, "#74B9FF");
+      skyGrad.addColorStop(0.7, "#A1C4FD");
+      skyGrad.addColorStop(1, "#E8F0FE");
+      ctx.fillStyle = skyGrad;
+      ctx.fillRect(winX, winY, winW, winH);
+
+      // Warm Sun in Window
+      ctx.fillStyle = "#FEE589";
+      ctx.beginPath();
+      ctx.arc(winX + 35, winY + 28, 11, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Window Frame
+      ctx.strokeStyle = "#FFFFFF";
+      ctx.lineWidth = 4;
+      ctx.strokeRect(winX, winY, winW, winH);
+
+      // Floor Grid (Parquet Oak)
       for (let x = 0; x < size; x++) {
         for (let y = 0; y < size; y++) {
           const px = ox + (x - y) * (tileW / 2);
           const py = oy + (x + y) * (tileH / 2);
 
-          ctx.fillStyle = (x + y) % 2 === 0 ? "#FAF8F2" : "#F0ECE1";
+          ctx.fillStyle = (x + y) % 2 === 0 ? "#FAF7F0" : "#F1EDE1";
           ctx.beginPath();
           ctx.moveTo(px, py);
           ctx.lineTo(px + tileW / 2, py + tileH / 2);
@@ -95,58 +127,79 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
       }
 
       // Isometric Furniture
-      // 1. Sofa
-      const sofaX = ox - 25;
-      const sofaY = oy + 65;
-      ctx.fillStyle = "#7D968B";
+      // 1. Sage Curved Lounge Sofa
+      const sofaX = ox - 20;
+      const sofaY = oy + 85;
+      ctx.fillStyle = "rgba(32,36,51,0.12)";
       ctx.beginPath();
-      ctx.roundRect(sofaX - 22, sofaY - 24, 44, 24, 6);
-      ctx.fill();
-      ctx.fillStyle = "#587065";
-      ctx.beginPath();
-      ctx.roundRect(sofaX - 20, sofaY - 18, 40, 16, 4);
+      ctx.ellipse(sofaX, sofaY + 4, 30, 12, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // 2. Brass Lamp
-      const lampX = ox - 55;
-      const lampY = oy + 35;
-      ctx.fillStyle = "#C29B38";
-      ctx.fillRect(lampX - 1.5, lampY - 48, 3, 48);
+      ctx.fillStyle = "#738C82";
+      ctx.beginPath();
+      ctx.roundRect(sofaX - 28, sofaY - 32, 56, 32, 10);
+      ctx.fill();
+      ctx.fillStyle = "#5E776D";
+      ctx.beginPath();
+      ctx.roundRect(sofaX - 25, sofaY - 16, 50, 16, 6);
+      ctx.fill();
+      // Cushion
       ctx.fillStyle = "#FEE589";
       ctx.beginPath();
-      ctx.arc(lampX, lampY - 48, 12, Math.PI, 0);
+      ctx.roundRect(sofaX - 20, sofaY - 26, 12, 14, 3);
+      ctx.fill();
+
+      // 2. Mid-century Brass Lamp
+      const lampX = ox - 75;
+      const lampY = oy + 45;
+      ctx.fillStyle = "rgba(32,36,51,0.1)";
+      ctx.beginPath();
+      ctx.ellipse(lampX, lampY + 3, 16, 8, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#B38728";
+      ctx.fillRect(lampX - 2, lampY - 65, 4, 65);
+      ctx.fillStyle = "#FEE589";
+      ctx.beginPath();
+      ctx.arc(lampX + 8, lampY - 62, 15, Math.PI, 0);
       ctx.fill();
 
       if (lightOn) {
-        ctx.fillStyle = "rgba(254, 229, 137, 0.35)";
+        ctx.fillStyle = "rgba(254, 229, 137, 0.45)";
         ctx.beginPath();
-        ctx.arc(lampX, lampY - 44, 26, 0, Math.PI * 2);
+        ctx.arc(lampX + 8, lampY - 60, 36, 0, Math.PI * 2);
         ctx.fill();
       }
 
       // 3. Vintage Turntable
-      const turnX = ox + 40;
-      const turnY = oy + 45;
-      ctx.fillStyle = "#9C6644";
+      const turnX = ox + 50;
+      const turnY = oy + 60;
+      ctx.fillStyle = "#6B4226";
       ctx.beginPath();
-      ctx.roundRect(turnX - 16, turnY - 14, 32, 16, 3);
+      ctx.roundRect(turnX - 20, turnY - 18, 40, 20, 4);
       ctx.fill();
-      // Record
-      ctx.fillStyle = "#111";
+      // Vinyl record
+      ctx.fillStyle = "#18181B";
       ctx.beginPath();
-      ctx.arc(turnX - 4, turnY - 6, 7, 0, Math.PI * 2);
+      ctx.ellipse(turnX - 4, turnY - 8, 10, 6, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = "#FF6B57";
+      ctx.beginPath();
+      ctx.ellipse(turnX - 4, turnY - 8, 4, 2.5, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // 4. Plant
-      const plantX = ox + 65;
-      const plantY = oy + 75;
-      ctx.fillStyle = "#E6CCB2";
-      ctx.fillRect(plantX - 8, plantY - 12, 16, 12);
-      ctx.fillStyle = "#386641";
+      // 4. Monstera Plant in Ceramic Pot
+      const plantX = ox + 80;
+      const plantY = oy + 105;
+      ctx.fillStyle = "#E7D6C4";
       ctx.beginPath();
-      ctx.arc(plantX - 4, plantY - 18, 7, 0, Math.PI * 2);
-      ctx.arc(plantX + 4, plantY - 20, 8, 0, Math.PI * 2);
-      ctx.arc(plantX, plantY - 24, 7, 0, Math.PI * 2);
+      ctx.roundRect(plantX - 10, plantY - 16, 20, 16, 4);
+      ctx.fill();
+      ctx.fillStyle = "#2D6A4F";
+      ctx.beginPath();
+      ctx.arc(plantX - 5, plantY - 24, 11, 0, Math.PI * 2);
+      ctx.arc(plantX + 5, plantY - 26, 12, 0, Math.PI * 2);
+      ctx.arc(plantX, plantY - 32, 11, 0, Math.PI * 2);
       ctx.fill();
 
       angle += 0.025;
@@ -193,7 +246,7 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
           </p>
 
           {/* Fast CTA Card */}
-          <div className="w-full max-w-xl bg-white/90 backdrop-blur-xl border border-white/70 rounded-2xl p-5 sm:p-6 shadow-[0_12px_32px_rgba(43,48,68,0.08)]">
+          <div className="w-full max-w-xl bg-white/90 backdrop-blur-xl border border-white/70 rounded-3xl p-5 sm:p-6 shadow-[0_12px_32px_rgba(43,48,68,0.08)]">
             <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row gap-2.5 mb-4">
               <input
                 type="text"
@@ -221,7 +274,7 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
                     showToast("카카오 간편 가입이 연동되었습니다!");
                     onOpenPreReg();
                   }}
-                  className="inline-flex items-center gap-1.5 bg-[#FEE500] text-[#191919] font-bold px-3 py-1.5 rounded-lg hover:brightness-95 transition-all text-[11px]"
+                  className="inline-flex items-center gap-1.5 bg-[#FEE500] text-[#191919] font-bold px-3.5 py-1.5 rounded-xl hover:brightness-95 transition-all text-[11px] shadow-xs"
                 >
                   <MessageCircle className="w-3.5 h-3.5 fill-current" />
                   <span>카카오 1초 등록</span>
@@ -232,7 +285,7 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
                     showToast("Apple 간편 가입이 연동되었습니다!");
                     onOpenPreReg();
                   }}
-                  className="inline-flex items-center gap-1.5 bg-black text-white font-bold px-3 py-1.5 rounded-lg hover:bg-neutral-800 transition-all text-[11px]"
+                  className="inline-flex items-center gap-1.5 bg-black text-white font-bold px-3.5 py-1.5 rounded-xl hover:bg-neutral-800 transition-all text-[11px] shadow-xs"
                 >
                   <Apple className="w-3.5 h-3.5 fill-current" />
                   <span>Apple 간편 등록</span>
@@ -256,19 +309,19 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
 
         {/* Right Column: Interactive 2.5D Isometric Room Visual */}
         <div className="lg:col-span-5 flex justify-center">
-          <div className="relative w-full max-w-md bg-white/80 backdrop-blur-2xl border border-white/70 rounded-3xl p-5 shadow-[0_20px_50px_rgba(43,48,68,0.12)]">
+          <div className="relative w-full max-w-lg bg-white/80 backdrop-blur-2xl border border-white/70 rounded-[32px] p-5 shadow-[0_20px_50px_rgba(43,48,68,0.12)]">
             {/* Top Indicator */}
             <div className="flex items-center justify-between mb-3 px-2">
               <div className="flex items-center gap-2">
                 <span className="w-2 h-2 rounded-full bg-[#4ADE80] animate-pulse"></span>
-                <span className="text-[11px] font-mono font-bold text-[#2B3044]">2.5D LIVE PREVIEW</span>
+                <span className="text-[11px] font-mono font-bold text-[#2B3044]">CYWORLD MINIROOM 2.5D</span>
               </div>
               <button
                 onClick={() => {
                   setLightOn(!lightOn);
                   showToast(lightOn ? "스탠드 조명을 껐습니다." : "스탠드 조명을 켰습니다.");
                 }}
-                className="text-[10px] font-bold bg-[#EBF1EE] hover:bg-[#FEE589] text-[#2B3044] px-2.5 py-1 rounded-full transition-colors flex items-center gap-1"
+                className="text-[10px] font-bold bg-[#EBF1EE] hover:bg-[#FEE589] text-[#2B3044] px-3 py-1 rounded-full transition-colors flex items-center gap-1 shadow-xs"
               >
                 <Sparkles className="w-3 h-3 text-[#FF6B57]" />
                 <span>조명 {lightOn ? "끄기" : "켜기"}</span>
@@ -278,8 +331,8 @@ export default function HeroSection({ onOpenPreReg }: HeroSectionProps) {
             {/* Canvas */}
             <div className="w-full aspect-square rounded-2xl bg-gradient-to-br from-[#FFFDF9] to-[#F0ECE1] overflow-hidden shadow-inner flex items-center justify-center relative cursor-pointer"
                  onClick={() => setLightOn(!lightOn)}>
-              <canvas ref={canvasRef} width={420} height={420} className="w-full h-full block" />
-              <div className="absolute bottom-3 left-3 bg-[#2B3044]/80 backdrop-blur-md text-white text-[10px] font-mono px-2.5 py-1 rounded-full pointer-events-none">
+              <canvas ref={canvasRef} width={480} height={480} className="w-full h-full block" />
+              <div className="absolute bottom-3 left-3 bg-[#2B3044]/80 backdrop-blur-md text-white text-[10px] font-mono px-3 py-1 rounded-full pointer-events-none shadow-sm">
                 CLICK ROOM TO INTERACT
               </div>
             </div>

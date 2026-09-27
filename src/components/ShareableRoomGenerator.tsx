@@ -18,8 +18,8 @@ export default function ShareableRoomGenerator({
 }: GeneratorProps) {
   const miniCanvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const TILE_W = 36;
-  const TILE_H = 18;
+  const TILE_W = 42;
+  const TILE_H = 21;
   const GRID_SIZE = 8;
 
   const gridToIso = (gx: number, gy: number, ox: number, oy: number) => ({
@@ -36,15 +36,15 @@ export default function ShareableRoomGenerator({
 
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     const ox = canvas.width / 2;
-    const oy = canvas.height / 2 - 25;
+    const oy = canvas.height / 2 - 35;
 
     // Walls
     const topCorner = gridToIso(0, 0, ox, oy);
     const leftCorner = gridToIso(0, GRID_SIZE, ox, oy);
     const rightCorner = gridToIso(GRID_SIZE, 0, ox, oy);
-    const wallH = 75;
+    const wallH = 95;
 
-    ctx.fillStyle = currentMood === "dawn" ? "#25293A" : currentMood === "sunset" ? "#E8CFCE" : "#EAE6DB";
+    ctx.fillStyle = currentMood === "dawn" ? "#232738" : currentMood === "sunset" ? "#EAD3D0" : "#ECE7DC";
     ctx.beginPath();
     ctx.moveTo(topCorner.x, topCorner.y);
     ctx.lineTo(leftCorner.x, leftCorner.y);
@@ -53,7 +53,7 @@ export default function ShareableRoomGenerator({
     ctx.closePath();
     ctx.fill();
 
-    ctx.fillStyle = currentMood === "dawn" ? "#32374E" : currentMood === "sunset" ? "#F4DCDA" : "#F4F0E6";
+    ctx.fillStyle = currentMood === "dawn" ? "#2E344A" : currentMood === "sunset" ? "#F5DDD8" : "#F6F2E8";
     ctx.beginPath();
     ctx.moveTo(topCorner.x, topCorner.y);
     ctx.lineTo(rightCorner.x, rightCorner.y);
@@ -62,6 +62,17 @@ export default function ShareableRoomGenerator({
     ctx.closePath();
     ctx.fill();
 
+    // Scenic window on left wall
+    const winX = topCorner.x - 90;
+    const winY = topCorner.y - 75;
+    const winW = 44;
+    const winH = 55;
+    ctx.fillStyle = currentMood === "dawn" ? "#1E3A5F" : currentMood === "sunset" ? "#FF7E5F" : "#70A1FF";
+    ctx.fillRect(winX, winY, winW, winH);
+    ctx.strokeStyle = "#FFFFFF";
+    ctx.lineWidth = 3;
+    ctx.strokeRect(winX, winY, winW, winH);
+
     // Floor
     for (let x = 0; x < GRID_SIZE; x++) {
       for (let y = 0; y < GRID_SIZE; y++) {
@@ -69,11 +80,11 @@ export default function ShareableRoomGenerator({
         const isAlt = (x + y) % 2 === 0;
 
         if (currentMood === "dawn") {
-          ctx.fillStyle = isAlt ? "#2F354D" : "#3B415D";
+          ctx.fillStyle = isAlt ? "#282E42" : "#323952";
         } else if (currentMood === "sunset") {
-          ctx.fillStyle = isAlt ? "#FBE5DF" : "#F6DDD6";
+          ctx.fillStyle = isAlt ? "#FBE6E0" : "#F6DCD4";
         } else {
-          ctx.fillStyle = isAlt ? "#FAF8F2" : "#F0ECE1";
+          ctx.fillStyle = isAlt ? "#FAF7F0" : "#F1EDE1";
         }
 
         ctx.beginPath();
@@ -83,6 +94,10 @@ export default function ShareableRoomGenerator({
         ctx.lineTo(pt.x - TILE_W / 2, pt.y + TILE_H / 2);
         ctx.closePath();
         ctx.fill();
+
+        ctx.strokeStyle = "rgba(43,48,68,0.06)";
+        ctx.lineWidth = 1;
+        ctx.stroke();
       }
     }
 
@@ -92,46 +107,53 @@ export default function ShareableRoomGenerator({
       const pt = gridToIso(item.x, item.y, ox, oy);
       ctx.save();
       ctx.translate(pt.x, pt.y + TILE_H / 2);
-      ctx.fillStyle = "rgba(0,0,0,0.12)";
+      ctx.fillStyle = "rgba(0,0,0,0.14)";
       ctx.beginPath();
-      ctx.ellipse(0, 3, 12, 6, 0, 0, Math.PI * 2);
+      ctx.ellipse(0, 3, 14, 7, 0, 0, Math.PI * 2);
       ctx.fill();
 
-      // Simple representations
       if (item.id === "lamp") {
-        ctx.fillStyle = "#C29B38";
-        ctx.fillRect(-1.5, -34, 3, 34);
-        ctx.fillStyle = "#FFE589";
+        ctx.fillStyle = "#B38728";
+        ctx.fillRect(-1.5, -42, 3, 42);
+        ctx.fillStyle = "#FEE589";
         ctx.beginPath();
-        ctx.arc(0, -34, 9, Math.PI, 0);
+        ctx.arc(8, -40, 10, Math.PI, 0);
         ctx.fill();
       } else if (item.id === "sofa") {
-        ctx.fillStyle = "#7D968B";
+        ctx.fillStyle = "#738C82";
         ctx.beginPath();
-        ctx.roundRect(-15, -18, 30, 18, 4);
+        ctx.roundRect(-20, -24, 40, 24, 6);
         ctx.fill();
+        ctx.fillStyle = "#FEE589";
+        ctx.fillRect(-14, -20, 8, 10);
       } else if (item.id === "turntable") {
-        ctx.fillStyle = "#9C6644";
-        ctx.fillRect(-11, -11, 22, 12);
-        ctx.fillStyle = "#111";
+        ctx.fillStyle = "#6B4226";
+        ctx.fillRect(-14, -14, 28, 14);
+        ctx.fillStyle = "#18181B";
         ctx.beginPath();
-        ctx.arc(-3, -5, 5, 0, Math.PI * 2);
+        ctx.ellipse(-3, -7, 7, 4, 0, 0, Math.PI * 2);
         ctx.fill();
       } else if (item.id === "plant") {
-        ctx.fillStyle = "#E6CCB2";
-        ctx.fillRect(-6, -10, 12, 10);
-        ctx.fillStyle = "#386641";
+        ctx.fillStyle = "#E7D6C4";
+        ctx.fillRect(-8, -12, 16, 12);
+        ctx.fillStyle = "#2D6A4F";
         ctx.beginPath();
-        ctx.arc(0, -16, 7, 0, Math.PI * 2);
+        ctx.arc(0, -20, 9, 0, Math.PI * 2);
         ctx.fill();
       } else if (item.id === "mac") {
-        ctx.fillStyle = "#D6CCC2";
-        ctx.fillRect(-8, -18, 16, 18);
-        ctx.fillStyle = "#2B3044";
-        ctx.fillRect(-6, -16, 12, 9);
+        ctx.fillStyle = "#E6E2D8";
+        ctx.fillRect(-11, -24, 22, 24);
+        ctx.fillStyle = "#1E293B";
+        ctx.fillRect(-8, -21, 16, 12);
+        ctx.fillStyle = "#38BDF8";
+        ctx.fillRect(-5, -17, 6, 2);
       } else {
-        ctx.fillStyle = "#2B3044";
-        ctx.fillRect(-8, -22, 16, 22);
+        ctx.fillStyle = "#18181B";
+        ctx.fillRect(-11, -30, 22, 30);
+        ctx.fillStyle = "#FF6B57";
+        ctx.beginPath();
+        ctx.arc(0, -18, 6, 0, Math.PI * 2);
+        ctx.fill();
       }
 
       ctx.restore();
@@ -176,14 +198,14 @@ export default function ShareableRoomGenerator({
     // Nickname & Mood
     ctx.fillStyle = "#2B3044";
     ctx.font = "bold 64px sans-serif";
-    ctx.fillText(`${userNickname || "kobe"}의 감성 아지트`, 90, 310);
+    ctx.fillText(`${userNickname || "kobe"}의 대형 미니룸`, 90, 310);
 
     ctx.fillStyle = "#676D82";
     ctx.font = "32px sans-serif";
     const moodKorean = currentMood === "sunset" ? "노을 핑크" : currentMood === "dawn" ? "새벽 앰버" : "정오의 햇살";
     ctx.fillText(`현재 무드: ${moodKorean}`, 90, 360);
 
-    // Mini Room Canvas Scaled
+    // Scaled Mini Room Canvas
     const mini = miniCanvasRef.current;
     if (mini) {
       ctx.save();
@@ -214,7 +236,7 @@ export default function ShareableRoomGenerator({
     // Referral text
     ctx.fillStyle = "#2B3044";
     ctx.font = "bold 44px sans-serif";
-    ctx.fillText("나만의 방으로 초대합니다", 370, 1590);
+    ctx.fillText("나만의 미니룸으로 초대합니다", 370, 1590);
 
     ctx.fillStyle = "#FF6B57";
     ctx.font = "bold 34px monospace";
@@ -235,36 +257,36 @@ export default function ShareableRoomGenerator({
 
   return (
     <section id="generator" className="py-16 sm:py-24 max-w-7xl mx-auto px-4 sm:px-6">
-      <div className="bg-gradient-to-br from-[#FAF8F2] to-[#EDE7D8] border border-white/80 rounded-3xl p-6 sm:p-12 shadow-[0_16px_40px_rgba(43,48,68,0.08)] grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
+      <div className="bg-gradient-to-br from-[#FAF8F2] to-[#EDE7D8] border border-white/80 rounded-[32px] p-6 sm:p-12 shadow-[0_16px_40px_rgba(43,48,68,0.08)] grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
         {/* Story Card Mockup (9:16) */}
         <div className="lg:col-span-5 flex justify-center">
-          <div className="w-[260px] h-[460px] bg-white rounded-[32px] border-[7px] border-[#2B3044] shadow-2xl p-4 flex flex-col justify-between relative overflow-hidden">
+          <div className="w-[280px] h-[500px] bg-white rounded-[36px] border-[8px] border-[#2B3044] shadow-2xl p-4 flex flex-col justify-between relative overflow-hidden">
             {/* Header */}
             <div className="flex items-center justify-between text-[9px] font-extrabold text-[#2B3044] tracking-wider">
-              <span>ON:ROOM // SPACE</span>
-              <span className="bg-[#FF6B57] text-white px-1.5 py-0.5 rounded text-[8px]">INVITE ONLY</span>
+              <span>ON:ROOM // MINIROOM</span>
+              <span className="bg-[#FF6B57] text-white px-2 py-0.5 rounded text-[8px]">INVITE ONLY</span>
             </div>
 
             {/* Room Visual */}
             <div className="flex-1 flex items-center justify-center my-2">
               <canvas
                 ref={miniCanvasRef}
-                width={260}
-                height={260}
-                className="w-full h-auto rounded-xl shadow-xs"
+                width={300}
+                height={300}
+                className="w-full h-auto rounded-2xl shadow-xs"
               />
             </div>
 
             {/* Footer */}
-            <div className="bg-white/95 border border-[#2B3044]/10 rounded-xl p-2.5 flex items-center gap-2.5 shadow-sm">
-              <div className="w-9 h-9 bg-[#2B3044] text-white text-[8px] font-mono flex items-center justify-center rounded">
+            <div className="bg-white/95 border border-[#2B3044]/10 rounded-2xl p-3 flex items-center gap-3 shadow-sm">
+              <div className="w-10 h-10 bg-[#2B3044] text-white text-[9px] font-mono flex items-center justify-center rounded-lg">
                 QR
               </div>
               <div className="flex-1 overflow-hidden">
-                <div className="text-[10px] font-extrabold text-[#2B3044] truncate">
-                  {userNickname || "kobe"}의 감성 아지트
+                <div className="text-[11px] font-extrabold text-[#2B3044] truncate">
+                  {userNickname || "kobe"}의 미니룸
                 </div>
-                <div className="text-[8px] font-mono text-[#FF6B57] truncate">{referralUrl}</div>
+                <div className="text-[9px] font-mono text-[#FF6B57] truncate">{referralUrl}</div>
               </div>
             </div>
           </div>
@@ -287,13 +309,13 @@ export default function ShareableRoomGenerator({
           </p>
 
           {/* Referral Link Box */}
-          <div className="bg-white border border-[#2B3044]/15 rounded-xl p-2 sm:p-2.5 flex items-center justify-between gap-3 mb-4 shadow-xs">
+          <div className="bg-white border border-[#2B3044]/15 rounded-2xl p-2.5 sm:p-3 flex items-center justify-between gap-3 mb-4 shadow-xs">
             <span className="text-xs font-mono font-bold text-[#2B3044] px-2 truncate">
               {referralUrl}
             </span>
             <button
               onClick={copyLink}
-              className="bg-[#FEE589] hover:bg-[#FFE066] text-[#2B3044] text-xs font-extrabold px-4 py-2 rounded-lg transition-colors flex items-center gap-1.5 whitespace-nowrap"
+              className="bg-[#FEE589] hover:bg-[#FFE066] text-[#2B3044] text-xs font-extrabold px-4.5 py-2.5 rounded-xl transition-colors flex items-center gap-1.5 whitespace-nowrap"
             >
               <Copy className="w-3.5 h-3.5" />
               <span>링크 복사</span>
