@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState } from "react";
-import Link from "next/link";
 import {
   Home,
   ShoppingBag,
@@ -511,14 +510,6 @@ export default function KudosApp() {
                 ))}
               </select>
             </div>
-
-            {/* Link to Classic Cyworld Hompy */}
-            <Link
-              href="/miniroom"
-              className="text-xs font-bold text-pink-600 bg-pink-50 hover:bg-pink-100 px-3 py-1.5 rounded-2xl border border-pink-200 transition-colors hidden lg:flex items-center gap-1"
-            >
-              <span>🌸 이전 미니홈피 보기</span>
-            </Link>
           </div>
         </div>
       </header>

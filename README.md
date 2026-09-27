@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# kudoworks (쿠도웍스)
 
-## Getting Started
+> **동료 인정과 성장의 조직 문화 인텔리전스 (B2B Peer Recognition & Culture Intelligence SaaS)**
 
-First, run the development server:
+kudoworks는 사내 동료 간의 따뜻한 칭찬과 인정을 데이터화하여, 심리적 안전감을 높이고 건강한 조직 문화를 조성하는 엔터프라이즈 B2B 솔루션입니다.
+
+---
+
+## ✨ 핵심 기능 (Key Features)
+
+1. **스플래시 첫 로딩화면 (Native Mobile Splash)**
+   - 앱 구동 시 브랜드 시그니처 엠블럼과 로딩 프로그레스(0% -> 100%) 애니메이션 제공
+   - 사내 네트워크 연결 및 데이터 동기화 연출
+
+2. **사내 피어 레코그니션 피드 (Kudos Feed)**
+   - 동료에게 칭찬 메시지와 실시간 포인트(Kudos) 선물
+   - 코어 밸류(Core Value) 태깅 및 사내 공감 반응(Cheers) 인터랙션
+
+3. **기프티콘 리워드 스토어 (Reward Store)**
+   - 칭찬으로 적립한 포인트로 스타벅스, 배달의민족, 네이버페이 등 즉시 교환
+   - 단일행 깔끔한 모바일 최적화 레이아웃
+
+4. **활동 요약 & 모바일 바코드 (My Page & Activity Log)**
+   - 보낸 칭찬 / 받은 칭찬 / 사용 내역(포인트 차감) 탭 필터링
+   - 교환한 기프티콘 클릭 시 즉시 실물 결제용 대형 바코드 팝업 지원
+
+5. **HR 컬처 인텔리전스 대시보드 (HR Admin Dashboard)**
+   - 팀별 칭찬 버짓 분배 및 월간 리셋
+   - 신입사원 온보딩 환영 보너스 자동 발행
+   - 심리적 안전감 지표 및 사내 원온원(1:1) 추천 시스템
+
+---
+
+## 🚀 빠른 시작 (Getting Started)
 
 ```bash
+# 의존성 설치
+npm install
+
+# 로컬 개발 서버 실행 (모바일 접속 허용)
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+
+# 프로덕션 빌드
+npm run build
 ```
-
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
-
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
