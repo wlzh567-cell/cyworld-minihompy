@@ -16,6 +16,8 @@ import {
   RefreshCw,
   UserPlus,
   X,
+  ChevronDown,
+  Building2,
 } from "lucide-react";
 import {
   User,
@@ -27,6 +29,7 @@ import {
   NudgeCategory,
   ReportCategory,
   DirectChatMessage,
+  CompanyWorkspace,
   getUserCumulativePoints,
 } from "../../types/kudos";
 import {
@@ -36,6 +39,7 @@ import {
   INITIAL_NUDGES,
   STORE_ITEMS,
   INITIAL_COMPLIANCE_REPORTS,
+  INITIAL_COMPANIES,
 } from "../../data/mockKudos";
 import KudosFeedTab from "./KudosFeedTab";
 import SendKudosModal from "./SendKudosModal";
@@ -49,11 +53,17 @@ import DirectMessageModal from "./DirectMessageModal";
 import MessengerHubModal from "./MessengerHubModal";
 import KudoLogo from "./KudoLogo";
 import SplashScreen from "./SplashScreen";
+import CompanySelectScreen from "./CompanySelectScreen";
 import { AnimatePresence } from "framer-motion";
 
 export default function KudosApp() {
   // App-level view mode: Mobile Phone App vs HR Enterprise Dashboard
   const [appMode, setAppMode] = useState<"mobile" | "hr_admin">("mobile");
+
+  // Companies / Workspace Multi-Tenant State
+  const [companies, setCompanies] = useState<CompanyWorkspace[]>(INITIAL_COMPANIES);
+  const [selectedCompanyId, setSelectedCompanyId] = useState<string | null>(null);
+  const [showCompanySelect, setShowCompanySelect] = useState(false);
 
   // Add User / Employee Onboarding Modal State
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
@@ -67,7 +77,7 @@ export default function KudosApp() {
   // App Initial Splash / Loading Screen State
   const [showSplash, setShowSplash] = useState(true);
 
-  // Current active user
+  // Current active user & data states (driven by selected company)
   const [users, setUsers] = useState<User[]>(INITIAL_USERS);
   const [currentUserId, setCurrentUserId] = useState<string>("user-1");
 
@@ -421,19 +431,123 @@ export default function KudosApp() {
     );
   };
 
+  // Active company workspace
+  const currentCompany = companies.find((c) => c.id === selectedCompanyId) || companies[0];
+
+  const handleSelectCompany = (company: CompanyWorkspace) => {
+    setSelectedCompanyId(company.id);
+    setUsers(company.users);
+    setCurrentUserId(company.users[0]?.id || "user-1");
+    setRecognitions(company.recognitions);
+    setShowCompanySelect(false);
+  };
+
+  const handleCreateCompany = (newCompanyData: {
+    name: string;
+    industry: string;
+    tagline: string;
+    emoji: string;
+  }) => {
+    const newCompId = `comp-${Date.now()}`;
+    const defaultEmp: User = {
+      id: `${newCompId}-user-1`,
+      name: "나의 동료",
+      avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+      department: "프로덕트",
+      jobTitle: "멤버",
+      givePoints: 500,
+      earnedPoints: 1500,
+      cumulativePoints: 1500,
+      role: "employee",
+      joinedDaysAgo: 1,
+    };
+    const defaultAdmin: User = {
+      id: `${newCompId}-admin`,
+      name: "관리자 (HR)",
+      avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+      department: "피플앤컬처(인사)",
+      jobTitle: "피플팀 총괄",
+      givePoints: 1000,
+      earnedPoints: 2000,
+      cumulativePoints: 2000,
+      role: "hr_admin",
+      joinedDaysAgo: 1,
+    };
+    const newCompany: CompanyWorkspace = {
+      id: newCompId,
+      name: newCompanyData.name,
+      englishName: newCompanyData.name,
+      tagline: newCompanyData.tagline,
+      industry: newCompanyData.industry,
+      logoBg: "from-blue-600 via-indigo-600 to-cyan-600",
+      logoEmoji: newCompanyData.emoji,
+      memberCount: 2,
+      activeKudosRate: 100,
+      domain: `${newCompanyData.name.toLowerCase().replace(/[^a-z0-9]/g, "") || "company"}.co.kr`,
+      users: [defaultEmp, defaultAdmin],
+      recognitions: [
+        {
+          id: `${newCompId}-rec-1`,
+          senderId: defaultAdmin.id,
+          receiverId: defaultEmp.id,
+          pointsAmount: 100,
+          message: `🎉 '${newCompanyData.name}' 워크스페이스가 성공적으로 개설되었습니다! 첫 칭찬을 보내보세요!`,
+          coreValueTag: "탁월한 실행력",
+          cheersCount: 3,
+          cheeredByMe: true,
+          createdAt: "방금 전",
+        },
+      ],
+    };
+    setCompanies((prev) => [...prev, newCompany]);
+    handleSelectCompany(newCompany);
+  };
+
   return (
     <div className="min-h-screen bg-[#F4F5F9] text-[#202433] flex flex-col font-sans">
       {/* 🚀 Mobile First Launch / Splash Screen */}
       <AnimatePresence>
-        {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+        {showSplash && (
+          <SplashScreen
+            onFinish={() => {
+              setShowSplash(false);
+              if (!selectedCompanyId) {
+                setShowCompanySelect(true);
+              }
+            }}
+          />
+        )}
+      </AnimatePresence>
+
+      {/* 🏢 Company / Workspace Selection Screen */}
+      <AnimatePresence>
+        {!showSplash && (!selectedCompanyId || showCompanySelect) && (
+          <CompanySelectScreen
+            companies={companies}
+            selectedCompanyId={selectedCompanyId || undefined}
+            onSelectCompany={handleSelectCompany}
+            onCreateCompany={handleCreateCompany}
+          />
+        )}
       </AnimatePresence>
 
       {/* Global Top Navbar - Hidden on Mobile so smartphones experience a 100% real native app! */}
       <header className="hidden md:block sticky top-0 z-40 bg-white/90 backdrop-blur-xl border-b border-neutral-200/80 px-4 sm:px-8 py-3 shadow-xs">
         <div className="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
-          {/* Brand with Official Signature Logo */}
+          {/* Brand with Official Signature Logo + Company Switcher */}
           <div className="flex items-center gap-3">
             <KudoLogo size="md" withText />
+            <button
+              onClick={() => setShowCompanySelect(true)}
+              className="flex items-center gap-1.5 px-3 py-1 bg-neutral-100 hover:bg-neutral-200 text-neutral-800 rounded-xl text-xs font-black transition-colors border border-neutral-200 shadow-2xs group"
+              title="회사(워크스페이스) 변경"
+            >
+              <span>{currentCompany.logoEmoji}</span>
+              <span>{currentCompany.name}</span>
+              <span className="text-[10px] text-blue-600 font-extrabold bg-blue-50 group-hover:bg-blue-100 px-1.5 py-0.5 rounded transition-colors">
+                회사 변경 ▾
+              </span>
+            </button>
             <span className="text-[10px] font-extrabold bg-blue-100 text-blue-800 px-2 py-0.5 rounded-full">
               B2B SaaS
             </span>
@@ -522,8 +636,19 @@ export default function KudosApp() {
             {/* Mobile Top Navigation Bar for Admin */}
             <div className="md:hidden flex items-center justify-between bg-neutral-900 text-white p-3 rounded-2xl mb-3 shadow-md">
               <div className="flex items-center gap-2">
-                <LayoutDashboard className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-black">HR 인사팀 관리자 모드</span>
+                <button
+                  onClick={() => setShowCompanySelect(true)}
+                  className="flex items-center gap-1.5 px-2 py-1 bg-white/10 hover:bg-white/20 rounded-xl text-[11px] font-bold text-neutral-200 border border-white/10 active:scale-95"
+                  title="회사(워크스페이스) 변경"
+                >
+                  <span>{currentCompany.logoEmoji}</span>
+                  <span className="max-w-[70px] truncate">{currentCompany.name}</span>
+                  <ChevronDown className="w-3 h-3 text-neutral-400" />
+                </button>
+                <div className="flex items-center gap-1">
+                  <LayoutDashboard className="w-3.5 h-3.5 text-amber-400" />
+                  <span className="text-xs font-black">관리자</span>
+                </div>
               </div>
               <button
                 onClick={() => setAppMode("mobile")}
@@ -555,7 +680,20 @@ export default function KudosApp() {
 
               {/* Mobile App Header (Real native app header on smartphone) */}
               <div className="px-4 py-3 border-b border-neutral-100 flex items-center justify-between bg-white/95 backdrop-blur-md sticky top-0 z-20 shadow-2xs">
-                <KudoLogo size="sm" withText />
+                <div className="flex items-center gap-2">
+                  <KudoLogo size="sm" />
+                  <button
+                    onClick={() => setShowCompanySelect(true)}
+                    className="flex items-center gap-1 px-2.5 py-1 rounded-xl bg-neutral-100 hover:bg-neutral-200 transition-colors border border-neutral-200 active:scale-95"
+                    title="회사(워크스페이스) 변경"
+                  >
+                    <span className="text-xs">{currentCompany.logoEmoji}</span>
+                    <span className="text-[11px] font-black text-neutral-800 max-w-[85px] truncate">
+                      {currentCompany.name}
+                    </span>
+                    <ChevronDown className="w-3 h-3 text-neutral-400" />
+                  </button>
+                </div>
 
                 <div className="flex items-center gap-2">
                   <button
@@ -871,11 +1009,24 @@ export default function KudosApp() {
               })}
             </div>
 
-            {/* Replay Splash Screen Button */}
-            <div className="mt-4 pt-3 border-t border-neutral-100">
+            {/* Switch Company Workspace & Replay Splash Buttons */}
+            <div className="mt-4 pt-3 border-t border-neutral-100 space-y-2">
               <button
                 onClick={() => {
                   setIsAccountModalOpen(false);
+                  setShowCompanySelect(true);
+                }}
+                className="w-full py-2.5 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-xl text-xs font-extrabold transition-colors flex items-center justify-center gap-2 border border-blue-200"
+              >
+                <Building2 className="w-4 h-4 text-blue-600" />
+                <span>회사(워크스페이스) 변경</span>
+                <span className="text-[10px] text-neutral-500 font-medium">({currentCompany.name})</span>
+              </button>
+
+              <button
+                onClick={() => {
+                  setIsAccountModalOpen(false);
+                  setSelectedCompanyId(null);
                   setShowSplash(true);
                 }}
                 className="w-full py-2 bg-neutral-100 hover:bg-neutral-200 text-neutral-600 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-1.5"

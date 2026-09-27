@@ -121,3 +121,18 @@ export interface DirectChatMessage {
   isKudosTip?: boolean;
 }
 
+export interface CompanyWorkspace {
+  id: string;
+  name: string;
+  englishName: string;
+  tagline: string;
+  industry: string;
+  logoBg: string;
+  logoEmoji: string;
+  memberCount: number;
+  activeKudosRate: number; // e.g. 98%
+  domain: string;
+  users: User[];
+  recognitions: Recognition[];
+}
+
