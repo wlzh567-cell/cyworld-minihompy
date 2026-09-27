@@ -1,0 +1,1185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>✿ 나의 미니홈피 ✿</title>
+  <meta name="description" content="싸이월드 감성 미니홈피 - 추억의 그 공간으로 돌아와요 🌸" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700;800&family=Do+Hyeon&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --pink: #ffb3c6;
+      --lavender: #c9b1e8;
+      --mint: #a8e6cf;
+      --peach: #ffd3a5;
+      --sky: #b3d9f7;
+      --yellow: #fff3a3;
+      --bg: #fce4f3;
+      --card: rgba(255,255,255,0.82);
+      --border: #e8a0c0;
+      --text: #5a3060;
+      --text-light: #a070b0;
+      --shadow: 0 4px 20px rgba(200,100,180,0.18);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Nanum Gothic', sans-serif;
+      background: var(--bg);
+      min-height: 100vh;
+      overflow-x: hidden;
+      color: var(--text);
+    }
+
+    #sparkles-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .cursor-star {
+      position: fixed;
+      pointer-events: none;
+      font-size: 14px;
+      animation: cursor-fade 1s ease forwards;
+      z-index: 9999;
+    }
+    @keyframes cursor-fade {
+      0%   { opacity: 1; transform: scale(1) translateY(0); }
+      100% { opacity: 0; transform: scale(0.3) translateY(-30px); }
+    }
+
+    .page-wrapper {
+      position: relative;
+      z-index: 1;
+      max-width: 820px;
+      margin: 0 auto;
+      padding: 20px 16px 60px;
+    }
+
+    .site-header {
+      text-align: center;
+      padding: 18px 0 10px;
+      animation: fadeDown 0.7s ease;
+    }
+    .site-header .logo-text {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #c77dff, #ff85a1, #ffb347);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      letter-spacing: 2px;
+    }
+    .site-header .subtitle {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      margin-top: 2px;
+      letter-spacing: 3px;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: center;
+      gap: 6px;
+      flex-wrap: wrap;
+      margin: 14px 0;
+      animation: fadeDown 0.8s ease;
+    }
+    .nav-bar a {
+      text-decoration: none;
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 14px;
+      border-radius: 20px;
+      border: 1.5px solid var(--border);
+      background: var(--card);
+      color: var(--text);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .nav-bar a:hover {
+      background: var(--pink);
+      border-color: #d080a0;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(200,80,140,0.2);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+    @media (max-width: 600px) {
+      .main-grid { grid-template-columns: 1fr; }
+    }
+
+    .card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(8px);
+      animation: fadeUp 0.6s ease both;
+    }
+    .card-title {
+      font-size: 0.72rem;
+      font-weight: 800;
+      color: #b060c0;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .card-title::before, .card-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border), transparent);
+    }
+
+    .profile-card { text-align: center; animation-delay: 0.05s; }
+    .minimi-wrapper {
+      position: relative;
+      display: inline-block;
+      margin-bottom: 10px;
+    }
+    .minimi-img {
+      width: 100px;
+      height: 100px;
+      object-fit: contain;
+      image-rendering: pixelated;
+      filter: drop-shadow(0 4px 10px rgba(180,80,200,0.3));
+      animation: bounce 2.5s ease-in-out infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50%       { transform: translateY(-8px); }
+    }
+    .minimi-glow {
+      position: absolute;
+      bottom: -6px; left: 50%;
+      transform: translateX(-50%);
+      width: 70px; height: 16px;
+      background: radial-gradient(ellipse, rgba(180,80,200,0.3), transparent);
+      border-radius: 50%;
+      animation: glow-pulse 2.5s ease-in-out infinite;
+    }
+    @keyframes glow-pulse {
+      0%, 100% { opacity: 0.5; transform: translateX(-50%) scaleX(1); }
+      50%       { opacity: 1;   transform: translateX(-50%) scaleX(1.3); }
+    }
+
+    .profile-name {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 1.3rem;
+      color: var(--text);
+      margin-bottom: 2px;
+    }
+    .profile-mood {
+      font-size: 0.78rem;
+      color: var(--text-light);
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .visitor-box {
+      background: linear-gradient(135deg, rgba(201,177,232,0.3), rgba(255,179,198,0.3));
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 8px;
+      font-size: 0.72rem;
+      color: var(--text-light);
+      margin-bottom: 10px;
+    }
+    .visitor-box .count {
+      font-weight: 800;
+      color: #c060d0;
+      font-size: 0.9rem;
+    }
+
+    .dotori-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #8b5e3c;
+    }
+    .dotori-icon { font-size: 1.1rem; }
+
+    .ilchon-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .ilchon-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 8px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.6);
+      border: 1px solid rgba(232,160,192,0.4);
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+    .ilchon-item:hover {
+      background: rgba(255,179,198,0.2);
+      transform: translateX(3px);
+    }
+    .ilchon-avatar {
+      width: 30px; height: 30px;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .ilchon-info { flex: 1; }
+    .ilchon-name { font-size: 0.8rem; font-weight: 700; color: var(--text); }
+    .ilchon-msg  { font-size: 0.68rem; color: var(--text-light); }
+    .ilchon-status {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #5cd65c;
+      flex-shrink: 0;
+      box-shadow: 0 0 6px rgba(92,214,92,0.6);
+    }
+    .ilchon-status.away { background: #ffa500; box-shadow: 0 0 6px rgba(255,165,0,0.6); }
+    .ilchon-status.off  { background: #ccc; box-shadow: none; }
+
+    .bgm-player { animation-delay: 0.1s; }
+    .bgm-display {
+      background: linear-gradient(135deg, #2d1b69, #5a2d82);
+      border-radius: 10px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      color: white;
+      position: relative;
+      overflow: hidden;
+    }
+    .bgm-display::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 60%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+      animation: scanner 3s linear infinite;
+    }
+    @keyframes scanner {
+      0%   { left: -100%; }
+      100% { left: 200%; }
+    }
+    .bgm-title-scroll {
+      font-size: 0.78rem;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+    .bgm-title-inner {
+      display: inline-block;
+      animation: marquee 10s linear infinite;
+    }
+    @keyframes marquee {
+      0%   { transform: translateX(100%); }
+      100% { transform: translateX(-200%); }
+    }
+    .bgm-waveform {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 22px;
+      margin-top: 6px;
+    }
+    .bgm-bar {
+      width: 4px;
+      background: linear-gradient(to top, #ff85a1, #c77dff);
+      border-radius: 2px;
+      animation: wave 0.8s ease-in-out infinite alternate;
+    }
+    @keyframes wave {
+      from { height: 4px; }
+      to   { height: 18px; }
+    }
+    .bgm-controls {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    .bgm-btn {
+      background: linear-gradient(135deg, var(--lavender), var(--pink));
+      border: none;
+      border-radius: 50%;
+      width: 34px; height: 34px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 8px rgba(180,80,200,0.2);
+    }
+    .bgm-btn:hover { transform: scale(1.15); box-shadow: 0 4px 14px rgba(180,80,200,0.4); }
+    .bgm-btn.active { background: linear-gradient(135deg, #c77dff, #ff85a1); }
+
+    .playlist {
+      margin-top: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .playlist-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 5px 8px;
+      border-radius: 8px;
+      font-size: 0.74rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: var(--text-light);
+    }
+    .playlist-item:hover, .playlist-item.active {
+      background: rgba(199,125,255,0.15);
+      color: var(--text);
+    }
+    .playlist-item.active { font-weight: 700; color: #b050d0; }
+    .playlist-num { font-size: 0.65rem; width: 14px; text-align: right; }
+
+    .right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .diary-card { animation-delay: 0.15s; }
+    .diary-entries {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .diary-entry {
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(232,160,192,0.4);
+      border-radius: 12px;
+      padding: 12px 14px;
+      transition: all 0.25s;
+      cursor: pointer;
+    }
+    .diary-entry:hover {
+      background: rgba(255,179,198,0.12);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 18px rgba(200,80,160,0.12);
+    }
+    .diary-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 5px;
+    }
+    .diary-date { font-size: 0.68rem; color: var(--text-light); }
+    .diary-mood { font-size: 0.9rem; }
+    .diary-title {
+      font-size: 0.88rem;
+      font-weight: 800;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+    .diary-preview {
+      font-size: 0.76rem;
+      color: var(--text-light);
+      line-height: 1.5;
+    }
+    .diary-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 7px;
+    }
+    .tag {
+      font-size: 0.65rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(199,125,255,0.15);
+      color: #a060c0;
+      border: 1px solid rgba(199,125,255,0.3);
+    }
+
+    .photo-card { animation-delay: 0.2s; }
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+    }
+    .photo-item {
+      aspect-ratio: 1;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      cursor: pointer;
+      border: 2px solid rgba(232,160,192,0.3);
+      transition: all 0.25s;
+    }
+    .photo-item:hover { transform: scale(1.04); box-shadow: 0 6px 18px rgba(200,80,160,0.2); }
+    .photo-item .photo-inner {
+      width: 100%; height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      transition: transform 0.3s;
+    }
+    .photo-item:hover .photo-inner { transform: scale(1.1); }
+    .photo-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(100,40,120,0.5);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.25s;
+      font-size: 0.65rem;
+      color: white;
+      font-weight: 700;
+      text-align: center;
+      padding: 4px;
+    }
+    .photo-item:hover .photo-overlay { opacity: 1; }
+
+    .guestbook-card { animation-delay: 0.25s; }
+    .guestbook-entries {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+    .guestbook-entries::-webkit-scrollbar { width: 4px; }
+    .guestbook-entries::-webkit-scrollbar-track { background: transparent; }
+    .guestbook-entries::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+    .gb-entry {
+      display: flex;
+      gap: 10px;
+      padding: 8px 10px;
+      background: rgba(255,255,255,0.5);
+      border: 1px solid rgba(232,160,192,0.35);
+      border-radius: 10px;
+      animation: fadeUp 0.4s ease both;
+    }
+    .gb-avatar {
+      font-size: 1.5rem;
+      width: 36px; height: 36px;
+      flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(199,125,255,0.12);
+      border-radius: 50%;
+    }
+    .gb-content { flex: 1; }
+    .gb-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2px; }
+    .gb-name   { font-size: 0.78rem; font-weight: 800; color: var(--text); }
+    .gb-time   { font-size: 0.65rem; color: var(--text-light); }
+    .gb-text   { font-size: 0.76rem; color: #7a5080; line-height: 1.5; }
+
+    .gb-form { display: flex; flex-direction: column; gap: 6px; }
+    .gb-input-row { display: flex; gap: 6px; }
+    .gb-input, .gb-textarea {
+      font-family: 'Nanum Gothic', sans-serif;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 7px 10px;
+      font-size: 0.78rem;
+      background: rgba(255,255,255,0.8);
+      color: var(--text);
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .gb-input:focus, .gb-textarea:focus {
+      border-color: #c060d0;
+      box-shadow: 0 0 0 3px rgba(192,96,208,0.12);
+    }
+    .gb-input { flex: 1; }
+    .gb-textarea { resize: none; width: 100%; height: 58px; }
+    .gb-submit {
+      font-family: 'Nanum Gothic', sans-serif;
+      background: linear-gradient(135deg, #c77dff, #ff85a1);
+      color: white;
+      border: none;
+      border-radius: 10px;
+      padding: 8px 18px;
+      font-size: 0.78rem;
+      font-weight: 800;
+      cursor: pointer;
+      transition: all 0.2s;
+      align-self: flex-end;
+    }
+    .gb-submit:hover { transform: translateY(-2px); box-shadow: 0 4px 14px rgba(180,80,200,0.35); }
+    .gb-submit:active { transform: translateY(0); }
+
+    .game-card { animation-delay: 0.3s; }
+    .game-area {
+      background: linear-gradient(135deg, #1a0a2e, #2d1b4e);
+      border-radius: 12px;
+      padding: 16px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      min-height: 140px;
+    }
+    #catch-game { position: relative; width: 100%; height: 120px; cursor: crosshair; }
+    .catch-item {
+      position: absolute;
+      font-size: 1.4rem;
+      cursor: pointer;
+      animation: fall linear forwards;
+      user-select: none;
+    }
+    @keyframes fall {
+      from { transform: translateY(-30px) rotate(0deg); }
+      to   { transform: translateY(140px) rotate(360deg); }
+    }
+    .game-score {
+      font-family: 'Do Hyeon', sans-serif;
+      font-size: 1.1rem;
+      color: #c77dff;
+      margin-bottom: 6px;
+    }
+    .game-start-btn {
+      font-family: 'Nanum Gothic', sans-serif;
+      background: linear-gradient(135deg, #c77dff, #ff85a1);
+      color: white;
+      border: none;
+      border-radius: 20px;
+      padding: 6px 18px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s;
+      margin-top: 6px;
+    }
+    .game-start-btn:hover { transform: scale(1.06); }
+
+    .floating-heart {
+      position: fixed;
+      font-size: 1.2rem;
+      pointer-events: none;
+      animation: heart-float 2s ease-out forwards;
+      z-index: 9998;
+    }
+    @keyframes heart-float {
+      0%   { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(-80px) scale(0.4); }
+    }
+
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: rgba(255,255,255,0.3); }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+    .page-footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 0.7rem;
+      color: var(--text-light);
+      animation: fadeUp 1s ease 0.5s both;
+    }
+    .page-footer .hearts { letter-spacing: 4px; font-size: 0.9rem; color: var(--pink); }
+
+    @keyframes fadeDown {
+      from { opacity: 0; transform: translateY(-20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(60px);
+      background: linear-gradient(135deg, #c77dff, #ff85a1);
+      color: white;
+      padding: 10px 22px;
+      border-radius: 24px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(180,80,200,0.4);
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1);
+      z-index: 9999;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    img { user-select: none; -webkit-user-drag: none; }
+  </style>
+</head>
+<body>
+
+<canvas id="sparkles-canvas"></canvas>
+<div class="toast" id="toast">✨ 방명록이 등록됐어요!</div>
+
+<div class="page-wrapper">
+
+  <header class="site-header">
+    <div class="logo-text">✿ 나의 미니홈피 ✿</div>
+    <div class="subtitle">♪ cyworld vibes since 2003 ♪</div>
+  </header>
+
+  <nav class="nav-bar">
+    <a onclick="scrollToSection('#profile-section')">🏠 홈</a>
+    <a onclick="scrollToSection('#diary-section')">📒 다이어리</a>
+    <a onclick="scrollToSection('#photo-section')">📷 사진첩</a>
+    <a onclick="scrollToSection('#guestbook-section')">💌 방명록</a>
+    <a onclick="scrollToSection('#game-section')">🎮 게임</a>
+  </nav>
+
+  <main class="main-grid">
+
+    <aside>
+      <section class="card profile-card" id="profile-section">
+        <div class="card-title">미니홈피</div>
+        <div class="minimi-wrapper">
+          <img src="minimi.jpg" alt="미니미" class="minimi-img" id="minimi" />
+          <div class="minimi-glow"></div>
+        </div>
+        <div class="profile-name">✦ 별빛소녀 ✦</div>
+        <div class="profile-mood">🌸 오늘도 반짝반짝 ✨</div>
+        <div class="visitor-box">
+          오늘 <span class="count" id="today-count">0</span> 명 방문 &nbsp;|&nbsp;
+          총 <span class="count" id="total-count">0</span> 명
+        </div>
+        <div class="dotori-box">
+          <span class="dotori-icon">🌰</span>
+          <span id="dotori-count">128</span> 도토리 보유중
+        </div>
+      </section>
+
+      <section class="card bgm-player" style="margin-top:14px; animation-delay:0.1s;">
+        <div class="card-title">BGM</div>
+        <div class="bgm-display">
+          <div class="bgm-title-scroll">
+            <span class="bgm-title-inner" id="bgm-scroll-text">🎵 로딩 중...</span>
+          </div>
+          <div class="bgm-waveform" id="waveform"></div>
+        </div>
+        <div class="bgm-controls">
+          <button class="bgm-btn" id="btn-prev" title="이전">⏮</button>
+          <button class="bgm-btn active" id="btn-play" title="재생/일시정지">▶</button>
+          <button class="bgm-btn" id="btn-next" title="다음">⏭</button>
+          <button class="bgm-btn" id="btn-mute" title="음소거">🔊</button>
+        </div>
+        <div class="playlist" id="playlist"></div>
+      </section>
+
+      <section class="card" style="margin-top:14px; animation-delay:0.12s;">
+        <div class="card-title">💝 일촌</div>
+        <div class="ilchon-list" id="ilchon-list"></div>
+      </section>
+    </aside>
+
+    <div class="right-col">
+
+      <section class="card diary-card" id="diary-section">
+        <div class="card-title">📒 다이어리</div>
+        <div class="diary-entries" id="diary-entries"></div>
+      </section>
+
+      <section class="card photo-card" id="photo-section">
+        <div class="card-title">📷 사진첩</div>
+        <div class="photo-grid" id="photo-grid"></div>
+      </section>
+
+      <section class="card guestbook-card" id="guestbook-section">
+        <div class="card-title">💌 방명록</div>
+        <div class="guestbook-entries" id="guestbook-entries"></div>
+        <div class="gb-form">
+          <div class="gb-input-row">
+            <input class="gb-input" id="gb-name" placeholder="닉네임 (예: 별빛이)" maxlength="12" />
+            <input class="gb-input" id="gb-emoji" placeholder="이모지" maxlength="2" style="max-width:60px;" />
+          </div>
+          <textarea class="gb-textarea" id="gb-text" placeholder="방명록을 남겨줘요 🌸"></textarea>
+          <button class="gb-submit" id="gb-submit" onclick="submitGuestbook()">✉️ 등록하기</button>
+        </div>
+      </section>
+
+      <section class="card game-card" id="game-section">
+        <div class="card-title">🎮 도토리 캐치</div>
+        <div class="game-area">
+          <div class="game-score">🌰 <span id="score">0</span> 도토리 획득!</div>
+          <div id="catch-game"></div>
+          <button class="game-start-btn" id="game-start-btn" onclick="startGame()">게임 시작!</button>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <footer class="page-footer">
+    <div class="hearts">♥ ♡ ♥ ♡ ♥</div>
+    <p style="margin-top:4px;">© 2003–2026 나의 미니홈피 | 오늘도 행복한 하루 되세요 🌟</p>
+  </footer>
+</div>
+
+<script>
+// 파티클
+const canvas = document.getElementById('sparkles-canvas');
+const ctx = canvas.getContext('2d');
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width  = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+resizeCanvas();
+window.addEventListener('resize', resizeCanvas);
+
+function createParticle() {
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height,
+    size: Math.random() * 3 + 1,
+    alpha: Math.random(),
+    speed: Math.random() * 0.4 + 0.1,
+    color: ['#ffb3c6','#c9b1e8','#a8e6cf','#ffd3a5','#b3d9f7','#fff3a3'][Math.floor(Math.random()*6)],
+    twinkle: Math.random() * Math.PI * 2,
+  };
+}
+
+for (let i = 0; i < 80; i++) particles.push(createParticle());
+
+function animateParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    p.twinkle += 0.04;
+    p.alpha = 0.3 + 0.5 * Math.abs(Math.sin(p.twinkle));
+    p.y -= p.speed;
+    if (p.y < -10) { Object.assign(p, createParticle(), { y: canvas.height + 10 }); }
+    ctx.globalAlpha = p.alpha;
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+  requestAnimationFrame(animateParticles);
+}
+animateParticles();
+
+// 마우스 커서 별
+const STARS = ['✦','✧','⭐','🌟','💫','✨','⚡','🌸','💕'];
+document.addEventListener('mousemove', e => {
+  if (Math.random() > 0.7) {
+    const el = document.createElement('div');
+    el.className = 'cursor-star';
+    el.textContent = STARS[Math.floor(Math.random()*STARS.length)];
+    el.style.left = (e.clientX + (Math.random()-0.5)*20) + 'px';
+    el.style.top  = (e.clientY + (Math.random()-0.5)*20) + 'px';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 1000);
+  }
+});
+
+// 방문자 카운터
+let total = parseInt(localStorage.getItem('mh_total') || '8312');
+let today = parseInt(localStorage.getItem('mh_today') || '0');
+const lastDate = localStorage.getItem('mh_date') || '';
+const todayStr = new Date().toDateString();
+if (lastDate !== todayStr) {
+  today = 0;
+  localStorage.setItem('mh_date', todayStr);
+}
+today++; total++;
+localStorage.setItem('mh_today', today);
+localStorage.setItem('mh_total', total);
+
+function animateCount(el, target, duration) {
+  var d = duration || 1200;
+  var start = Date.now();
+  var tick = function() {
+    var p = Math.min((Date.now()-start)/d, 1);
+    el.textContent = Math.floor(target*p).toLocaleString();
+    if (p < 1) requestAnimationFrame(tick);
+  };
+  tick();
+}
+animateCount(document.getElementById('today-count'), today);
+animateCount(document.getElementById('total-count'), total);
+
+// BGM (Web Audio API)
+const songs = [
+  { title: '💜 거미 - 보고싶다', bpm: 72 },
+  { title: '💖 버즈 - 겁쟁이', bpm: 90 },
+  { title: '💙 SG워너비 - 가슴따뜻한사람', bpm: 66 },
+  { title: '💗 빅뱅 - 거짓말', bpm: 80 },
+  { title: '🩷 원더걸스 - Nobody', bpm: 96 },
+];
+var currentSong = 0;
+var isPlaying = true;
+var isMuted = false;
+var audioCtx = null;
+var gainNode = null;
+var osc = null;
+var lfo = null;
+
+function getAudioCtx() {
+  if (!audioCtx) {
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0.08;
+    gainNode.connect(audioCtx.destination);
+  }
+  return audioCtx;
+}
+
+function playBeep(song) {
+  try {
+    var c = getAudioCtx();
+    if (osc) { try { osc.stop(); } catch(e){} }
+    if (lfo) { try { lfo.stop(); } catch(e){} }
+    osc = c.createOscillator();
+    lfo = c.createOscillator();
+    var lfoGain = c.createGain();
+    lfoGain.gain.value = 30;
+    lfo.frequency.value = song.bpm / 60;
+    lfo.connect(lfoGain);
+    lfoGain.connect(osc.frequency);
+    osc.type = 'sine';
+    osc.frequency.value = 440;
+    osc.connect(gainNode);
+    lfo.start();
+    osc.start();
+  } catch(e) {}
+}
+
+function stopBeep() {
+  try { if (osc) osc.stop(); } catch(e) {}
+  try { if (lfo) lfo.stop(); } catch(e) {}
+}
+
+function updateSongUI() {
+  document.getElementById('bgm-scroll-text').textContent = songs[currentSong].title + '  ♪ ♫ ♪  ';
+  document.querySelectorAll('.playlist-item').forEach(function(el, i) {
+    el.classList.toggle('active', i === currentSong);
+  });
+}
+
+// 파형 바
+var waveform = document.getElementById('waveform');
+for (var i = 0; i < 18; i++) {
+  var bar = document.createElement('div');
+  bar.className = 'bgm-bar';
+  bar.style.animationDelay = (i * 0.07) + 's';
+  bar.style.animationDuration = (0.5 + Math.random()*0.5) + 's';
+  waveform.appendChild(bar);
+}
+
+// 플레이리스트
+var playlistEl = document.getElementById('playlist');
+songs.forEach(function(s, i) {
+  var item = document.createElement('div');
+  item.className = 'playlist-item' + (i===0?' active':'');
+  item.innerHTML = '<span class="playlist-num">' + (i+1) + '</span> ' + s.title;
+  item.onclick = (function(idx) {
+    return function() {
+      currentSong = idx;
+      updateSongUI();
+      if (isPlaying) playBeep(songs[idx]);
+    };
+  })(i);
+  playlistEl.appendChild(item);
+});
+
+document.getElementById('btn-play').onclick = function() {
+  isPlaying = !isPlaying;
+  document.getElementById('btn-play').textContent = isPlaying ? '⏸' : '▶';
+  waveform.style.opacity = isPlaying ? '1' : '0.3';
+  if (isPlaying) playBeep(songs[currentSong]);
+  else stopBeep();
+};
+document.getElementById('btn-prev').onclick = function() {
+  currentSong = (currentSong - 1 + songs.length) % songs.length;
+  updateSongUI();
+  if (isPlaying) playBeep(songs[currentSong]);
+};
+document.getElementById('btn-next').onclick = function() {
+  currentSong = (currentSong + 1) % songs.length;
+  updateSongUI();
+  if (isPlaying) playBeep(songs[currentSong]);
+};
+document.getElementById('btn-mute').onclick = function() {
+  isMuted = !isMuted;
+  if (gainNode) gainNode.gain.value = isMuted ? 0 : 0.08;
+  document.getElementById('btn-mute').textContent = isMuted ? '🔇' : '🔊';
+};
+updateSongUI();
+
+// 일촌 목록
+var ilchons = [
+  { name: '하늘별이', msg: '오늘 뭐해? ㅋㅋ', emoji: '🌙', status: 'online' },
+  { name: '민트초코', msg: '공감 눌러줬어!', emoji: '🍀', status: 'away' },
+  { name: '핑크몽', msg: '나 오늘 일기 올렸어', emoji: '🌸', status: 'online' },
+  { name: '레인보우', msg: '미니미 너무 귀엽다', emoji: '🌈', status: 'off' },
+  { name: '달빛이', msg: '내일 만나자~', emoji: '🌙', status: 'online' },
+];
+var ilchonList = document.getElementById('ilchon-list');
+ilchons.forEach(function(il, i) {
+  var el = document.createElement('div');
+  el.className = 'ilchon-item';
+  el.style.animationDelay = (0.1 + i*0.05) + 's';
+  el.innerHTML = '<div class="ilchon-avatar">' + il.emoji + '</div>'
+    + '<div class="ilchon-info"><div class="ilchon-name">' + il.name + '</div>'
+    + '<div class="ilchon-msg">' + il.msg + '</div></div>'
+    + '<div class="ilchon-status ' + (il.status !== 'online' ? il.status : '') + '"></div>';
+  ilchonList.appendChild(el);
+});
+
+// 다이어리
+var diaries = [
+  {
+    date: '2026.09.27', mood: '🌸',
+    title: '오늘 하늘이 너무 예뻤어',
+    preview: '학교 끝나고 집에 오는 길에 노을이 너무 예뻐서 사진 찍었어. 분홍빛 하늘이랑 보라빛이 섞여있는데 진짜 동화 속 같았음 ㅠㅠ',
+    tags: ['#하늘','#노을','#감성']
+  },
+  {
+    date: '2026.09.25', mood: '😊',
+    title: '친구들이랑 떡볶이 먹은 날',
+    preview: '하교 후에 민트초코, 핑크몽이랑 분식집 갔다. 즉석떡볶이 2인분 시켰는데 배 터지게 먹었ㅋㅋ 행복한 하루였음!',
+    tags: ['#떡볶이','#친구','#먹스타그램']
+  },
+  {
+    date: '2026.09.22', mood: '💤',
+    title: '비 오는 날은 왜 이렇게 졸리지',
+    preview: '온종일 비가 왔는데 공부하다가 책상에서 깜빡 졸았어... 비 소리 들으면서 따뜻한 코코아 마셨는데 꿀맛이었음 ☕',
+    tags: ['#비','#홈카페','#힐링']
+  },
+];
+var diaryContainer = document.getElementById('diary-entries');
+diaries.forEach(function(d, i) {
+  var el = document.createElement('div');
+  el.className = 'diary-entry';
+  el.style.animationDelay = (0.2 + i*0.08) + 's';
+  el.innerHTML = '<div class="diary-meta"><span class="diary-date">' + d.date + '</span><span class="diary-mood">' + d.mood + '</span></div>'
+    + '<div class="diary-title">' + d.title + '</div>'
+    + '<div class="diary-preview">' + d.preview + '</div>'
+    + '<div class="diary-tags">' + d.tags.map(function(t){ return '<span class="tag">' + t + '</span>'; }).join('') + '</div>';
+  diaryContainer.appendChild(el);
+});
+
+// 사진첩
+var photos = [
+  { emoji: '🌸', label: '봄소풍' },
+  { emoji: '🍦', label: '아이스크림' },
+  { emoji: '🌈', label: '무지개' },
+  { emoji: '🎡', label: '놀이공원' },
+  { emoji: '🌙', label: '달밤산책' },
+  { emoji: '☕', label: '카페latte' },
+  { emoji: '🌻', label: '해바라기밭' },
+  { emoji: '🎀', label: '선물상자' },
+  { emoji: '✨', label: '별빛야경' },
+];
+var colors = ['#fce4f3','#e8f4ff','#f0ffe8','#fff8e1','#f3e8ff','#ffeee8','#e8fff5','#fff0f5','#fffde8'];
+var photoGrid = document.getElementById('photo-grid');
+photos.forEach(function(p, i) {
+  var el = document.createElement('div');
+  el.className = 'photo-item';
+  el.style.animationDelay = (0.25 + i*0.05) + 's';
+  el.style.background = colors[i];
+  el.innerHTML = '<div class="photo-inner">' + p.emoji + '</div><div class="photo-overlay">' + p.label + '</div>';
+  el.onclick = function() { launchHearts(el); };
+  photoGrid.appendChild(el);
+});
+
+function launchHearts(el) {
+  var rect = el.getBoundingClientRect();
+  var hearts = ['💕','💖','💗','💓','💝'];
+  for (var i = 0; i < 5; i++) {
+    (function(idx) {
+      setTimeout(function() {
+        var h = document.createElement('div');
+        h.className = 'floating-heart';
+        h.textContent = hearts[Math.floor(Math.random()*hearts.length)];
+        h.style.left = (rect.left + Math.random()*rect.width) + 'px';
+        h.style.top  = rect.top + 'px';
+        document.body.appendChild(h);
+        setTimeout(function() { h.remove(); }, 2000);
+      }, idx * 100);
+    })(i);
+  }
+}
+
+// 방명록
+var initGuestbook = [
+  { name: '핑크몽', emoji: '🌸', text: '미니홈피 너무 예쁘다!! 자주 놀러올게 💕', time: '09:12' },
+  { name: '민트초코', emoji: '🍀', text: '와 미니미 진짜 귀엽다ㅠㅠ 나도 이렇게 꾸미고싶어', time: '10:34' },
+  { name: '하늘별이', emoji: '🌙', text: '방명록 첫 방문! 오늘도 반짝반짝 하자 ✨', time: '11:05' },
+  { name: '레인보우', emoji: '🌈', text: 'BGM 좋다~~ 나도 이 노래 좋아함ㅋㅋ', time: '13:22' },
+  { name: '달빛이', emoji: '🌙', text: '도토리 선물했어 받아봐! 🌰🌰🌰', time: '15:47' },
+];
+
+var guestbook = JSON.parse(localStorage.getItem('mh_gb') || 'null') || initGuestbook;
+
+function renderGuestbook() {
+  var container = document.getElementById('guestbook-entries');
+  container.innerHTML = '';
+  guestbook.slice().reverse().forEach(function(entry, i) {
+    var el = document.createElement('div');
+    el.className = 'gb-entry';
+    el.style.animationDelay = (i * 0.05) + 's';
+    el.innerHTML = '<div class="gb-avatar">' + (entry.emoji || '👤') + '</div>'
+      + '<div class="gb-content"><div class="gb-header">'
+      + '<span class="gb-name">' + entry.name + '</span>'
+      + '<span class="gb-time">' + entry.time + '</span></div>'
+      + '<div class="gb-text">' + entry.text + '</div></div>';
+    container.appendChild(el);
+  });
+}
+renderGuestbook();
+
+function submitGuestbook() {
+  var name = document.getElementById('gb-name').value.trim() || '익명';
+  var emoji = document.getElementById('gb-emoji').value.trim() || '💜';
+  var text = document.getElementById('gb-text').value.trim();
+  if (!text) { showToast('💬 내용을 입력해줘요!'); return; }
+  var now = new Date();
+  var time = now.getHours().toString().padStart(2,'0') + ':' + now.getMinutes().toString().padStart(2,'0');
+  guestbook.push({ name: name, emoji: emoji, text: text, time: time });
+  localStorage.setItem('mh_gb', JSON.stringify(guestbook));
+  renderGuestbook();
+  document.getElementById('gb-name').value = '';
+  document.getElementById('gb-emoji').value = '';
+  document.getElementById('gb-text').value = '';
+  showToast('✨ 방명록이 등록됐어요!');
+  document.getElementById('guestbook-entries').scrollTop = 0;
+  var dc = document.getElementById('dotori-count');
+  dc.textContent = parseInt(dc.textContent) + 1;
+  for (var i = 0; i < 8; i++) spawnHeart();
+}
+
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(function() { t.classList.remove('show'); }, 2500);
+}
+
+function spawnHeart() {
+  var h = document.createElement('div');
+  h.className = 'floating-heart';
+  var arr = ['💕','💖','💗','💓','💝','🌸','✨'];
+  h.textContent = arr[Math.floor(Math.random()*arr.length)];
+  h.style.left = (Math.random() * window.innerWidth) + 'px';
+  h.style.top  = (window.innerHeight - 100) + 'px';
+  document.body.appendChild(h);
+  setTimeout(function() { h.remove(); }, 2000);
+}
+
+// 도토리 캐치 게임
+var score = 0;
+var gameRunning = false;
+var gameInterval = null;
+var gameTimeout = null;
+
+function startGame() {
+  var btn = document.getElementById('game-start-btn');
+  if (gameRunning) return;
+  gameRunning = true;
+  score = 0;
+  document.getElementById('score').textContent = '0';
+  btn.textContent = '게임중... ⏱ 15초';
+  btn.disabled = true;
+  var area = document.getElementById('catch-game');
+  area.innerHTML = '';
+
+  var timeLeft = 15;
+  var timer = setInterval(function() {
+    timeLeft--;
+    btn.textContent = '게임중... ⏱ ' + timeLeft + '초';
+    if (timeLeft <= 0) clearInterval(timer);
+  }, 1000);
+
+  var items  = ['🌰','🌰','🌰','💎','⭐','🍄','💀'];
+  var weights = [3,   3,   3,   2,   2,   1,   1 ];
+
+  function spawnItem() {
+    if (!gameRunning) return;
+    var flat = [];
+    items.forEach(function(it, i) {
+      for (var w = 0; w < weights[i]; w++) flat.push(it);
+    });
+    var icon = flat[Math.floor(Math.random() * flat.length)];
+    var div = document.createElement('div');
+    div.className = 'catch-item';
+    div.textContent = icon;
+    var leftPct = 5 + Math.random() * 85;
+    div.style.left = leftPct + '%';
+    var duration = 1.4 + Math.random() * 1.2;
+    div.style.animationDuration = duration + 's';
+    div.onclick = (function(ic, d) {
+      return function() {
+        if (ic === '🌰') { score += 1; showToast('🌰 +1 도토리!'); }
+        else if (ic === '💎') { score += 5; showToast('💎 +5 대박!'); }
+        else if (ic === '⭐') { score += 3; showToast('⭐ +3 스타!'); }
+        else if (ic === '🍄') { score += 2; showToast('🍄 +2 버섯!'); }
+        else if (ic === '💀') { score = Math.max(0, score-2); showToast('💀 -2 함정!'); }
+        document.getElementById('score').textContent = score;
+        d.remove();
+        for (var i = 0; i < 3; i++) spawnHeart();
+      };
+    })(icon, div);
+    area.appendChild(div);
+    setTimeout(function() { div.remove(); }, (duration + 0.2) * 1000);
+  }
+
+  gameInterval = setInterval(spawnItem, 600);
+
+  gameTimeout = setTimeout(function() {
+    clearInterval(gameInterval);
+    clearInterval(timer);
+    gameRunning = false;
+    area.innerHTML = '';
+    var dc = document.getElementById('dotori-count');
+    dc.textContent = parseInt(dc.textContent) + score;
+    btn.textContent = '게임 종료! ' + score + '개 획득 🌰 다시하기?';
+    btn.disabled = false;
+    showToast('🎉 ' + score + '개 획득! 도토리에 추가됐어요!');
+    for (var i = 0; i < 10; i++) {
+      (function(idx) { setTimeout(spawnHeart, idx*100); })(i);
+    }
+  }, 15000);
+}
+
+function scrollToSection(id) {
+  var el = document.querySelector(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+// 미니미 더블클릭 도토리
+document.getElementById('minimi').addEventListener('dblclick', function() {
+  var dc = document.getElementById('dotori-count');
+  dc.textContent = parseInt(dc.textContent) + 1;
+  showToast('🌰 미니미가 도토리 1개 선물했어요!');
+  for (var i = 0; i < 5; i++) {
+    (function(idx) { setTimeout(spawnHeart, idx*80); })(i);
+  }
+});
+
+// BGM 자동 시작
+document.body.addEventListener('click', function() {
+  if (isPlaying && audioCtx && audioCtx.state === 'suspended') {
+    audioCtx.resume().then(function() { playBeep(songs[currentSong]); });
+  } else if (isPlaying && !audioCtx) {
+    playBeep(songs[currentSong]);
+  }
+}, { once: true });
+</script>
+</body>
+</html>

@@ -30,13 +30,19 @@ export default function Navbar({ onOpenPreReg }: NavbarProps) {
         {/* Desktop Nav Links */}
         <nav className="hidden md:flex items-center gap-7">
           <Link
-            href="#sandbox"
-            className="text-xs font-bold text-[#676D82] hover:text-[#FF6B57] transition-colors"
+            href="/#sandbox"
+            className="text-xs font-bold text-[#676D82] hover:text-[#FF6B57] transition-colors flex items-center gap-1"
           >
-            룸 꾸미기 체험
+            <span>🏡 12×12 미니룸</span>
           </Link>
           <Link
-            href="#guestbook"
+            href="/miniroom"
+            className="text-xs font-bold text-pink-600 bg-pink-50 hover:bg-pink-100 px-2.5 py-1 rounded-full transition-colors flex items-center gap-1 border border-pink-200"
+          >
+            <span>🌸 추억의 미니홈피</span>
+          </Link>
+          <Link
+            href="/#guestbook"
             className="text-xs font-bold text-[#676D82] hover:text-[#FF6B57] transition-colors flex items-center gap-1"
           >
             <MessageSquare className="w-3.5 h-3.5 text-[#FF6B57]" />
@@ -89,11 +95,19 @@ export default function Navbar({ onOpenPreReg }: NavbarProps) {
         <div className="md:hidden mt-2 bg-white/95 backdrop-blur-2xl border border-white/80 rounded-2xl p-5 shadow-2xl animate-in fade-in slide-in-from-top-2">
           <div className="flex flex-col gap-4 text-sm font-bold text-[#2B3044]">
             <Link
-              href="#sandbox"
+              href="/#sandbox"
               onClick={() => setMobileMenuOpen(false)}
               className="py-1 hover:text-[#FF6B57]"
             >
-              룸 꾸미기 체험 (Sandbox)
+              🏡 12×12 대형 미니룸 스튜디오
+            </Link>
+            <Link
+              href="/miniroom"
+              onClick={() => setMobileMenuOpen(false)}
+              className="py-1 text-pink-600 hover:text-pink-700 flex items-center justify-between"
+            >
+              <span>🌸 추억의 싸이월드 미니홈피</span>
+              <span className="text-[10px] bg-pink-100 text-pink-700 px-2 py-0.5 rounded-full font-bold">CLASSIC</span>
             </Link>
             <Link
               href="#guestbook"

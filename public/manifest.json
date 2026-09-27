@@ -1,0 +1,17 @@
+{
+  "name": "kudoworks - 사내 동료 인정 및 조직문화",
+  "short_name": "kudoworks",
+  "description": "B2B 피어 레코그니션 & 컬처 인텔리전스",
+  "start_url": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#090D16",
+  "theme_color": "#090D16",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "64x64 32x32 24x24 16x16",
+      "type": "image/x-icon"
+    }
+  ]
+}

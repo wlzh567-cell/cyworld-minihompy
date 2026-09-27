@@ -1,0 +1,334 @@
+import { User, CoreValue, Recognition, GrowthNudge, StoreItem, ComplianceReport } from "../types/kudos";
+
+export const INITIAL_USERS: User[] = [
+  {
+    id: "user-1",
+    name: "김민준 대리",
+    avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+    department: "엔지니어링",
+    jobTitle: "프론트엔드 리드",
+    givePoints: 750,
+    earnedPoints: 2450,
+    cumulativePoints: 2450,
+    role: "employee",
+    joinedDaysAgo: 420,
+  },
+  {
+    id: "user-2",
+    name: "박서연 과장",
+    avatar: "https://images.unsplash.com/photo-1517841905240-472988babdf9?w=150&auto=format&fit=crop&q=80",
+    department: "프로덕트",
+    jobTitle: "프로덕트 오너 (PO)",
+    givePoints: 400,
+    earnedPoints: 3800,
+    cumulativePoints: 3800,
+    role: "employee",
+    joinedDaysAgo: 680,
+    isBirthdayToday: true, // 오늘 생일인 동료!
+  },
+  {
+    id: "user-3",
+    name: "최유진 매니저",
+    avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80",
+    department: "디자인",
+    jobTitle: "UI/UX 디자이너",
+    givePoints: 850,
+    earnedPoints: 1900,
+    cumulativePoints: 1900,
+    role: "employee",
+    joinedDaysAgo: 190,
+  },
+  {
+    id: "user-4",
+    name: "정도윤 팀장",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80",
+    department: "성장마케팅",
+    jobTitle: "퍼포먼스 마케팅 팀장",
+    givePoints: 200,
+    earnedPoints: 1200,
+    cumulativePoints: 1200,
+    role: "employee",
+    joinedDaysAgo: 890,
+  },
+  {
+    id: "user-5",
+    name: "이지원 팀장 (HR)",
+    avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80",
+    department: "피플앤컬처(인사)",
+    jobTitle: "HR 컬처 리드",
+    givePoints: 600,
+    earnedPoints: 2100,
+    cumulativePoints: 2100,
+    role: "hr_admin",
+    joinedDaysAgo: 510,
+  },
+  {
+    id: "user-6",
+    name: "한승우 신입",
+    avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&auto=format&fit=crop&q=80",
+    department: "엔지니어링",
+    jobTitle: "백엔드 주니어",
+    givePoints: 1000,
+    earnedPoints: 250,
+    cumulativePoints: 250,
+    role: "employee",
+    joinedDaysAgo: 45, // 최근 입사자
+    isNewHire: true,
+  },
+];
+
+export const CORE_VALUES: CoreValue[] = [
+  {
+    id: "one_team",
+    tag: "#원팀",
+    name: "One Team, One Goal",
+    color: "from-blue-500 to-indigo-600",
+    desc: "개인의 성과보다 팀의 성공을 우선하고 사일로를 허뭅니다.",
+  },
+  {
+    id: "fast_exec",
+    tag: "#빠른실행",
+    name: "Fast Execution",
+    color: "from-amber-500 to-orange-500",
+    desc: "완벽함보다 빠른 가설 검증과 민첩한 피드백 루프를 만듭니다.",
+  },
+  {
+    id: "customer_obsessed",
+    tag: "#고객집착",
+    name: "Customer Obsession",
+    color: "from-rose-500 to-pink-600",
+    desc: "모든 의사결정의 출발점과 도착점은 오직 고객 가치입니다.",
+  },
+  {
+    id: "excellence",
+    tag: "#탁월한전문성",
+    name: "Extreme Ownership",
+    color: "from-emerald-500 to-teal-600",
+    desc: "맡은 영역에서 타협 없는 높은 기준과 주인의식을 발휘합니다.",
+  },
+  {
+    id: "open_feedback",
+    tag: "#투명한공유",
+    name: "Radical Transparency",
+    color: "from-purple-500 to-violet-600",
+    desc: "맥락을 적극 공유하고 솔직하고 안전한 피드백을 나눕니다.",
+  },
+  {
+    id: "birthday_tag",
+    tag: "#생일축하 🎂",
+    name: "Happy Birthday",
+    color: "from-pink-500 to-rose-500",
+    desc: "오늘 생일을 맞이한 동료에게 따뜻한 축하와 포인트를 선물합니다.",
+  },
+  {
+    id: "welcome_tag",
+    tag: "#환영합니다 🌱",
+    name: "Welcome to Team",
+    color: "from-emerald-500 to-teal-600",
+    desc: "새롭게 합류한 신입 동료의 힘찬 첫걸음을 온 마음으로 응원합니다.",
+  },
+];
+
+export const INITIAL_RECOGNITIONS: Recognition[] = [
+  {
+    id: "rec-bday-1",
+    senderId: "user-5", // HR 컬처 리드
+    receiverId: "user-2", // 박서연 과장
+    pointsAmount: 100,
+    coreValueTag: "#생일축하 🎂",
+    message:
+      "🎂 [생일 축하] 오늘은 프로덕트팀 박서연 과장님의 생일입니다! 언제나 프로덕트의 든든한 나침반이 되어주셔서 깊이 감사드리며, 전사 웰컴 생일 보너스 100P와 함께 최고의 하루가 되시길 바랍니다! 🎉🎁 다들 따뜻한 축하를 남겨주세요!",
+    cheersCount: 28,
+    cheeredByMe: true,
+    createdAt: "30분 전",
+  },
+  {
+    id: "rec-newhire-1",
+    senderId: "user-5", // HR 컬처 리드
+    receiverId: "user-6", // 한승우 신입
+    pointsAmount: 100,
+    coreValueTag: "#환영합니다 🌱",
+    message:
+      "🌱 [신규 입사 환영] 엔지니어링팀에 한승우 님이 신규 입사하셨습니다! kudoworks의 새로운 동료가 되신 것을 전사 임직원 모두 환영하며, 웰컴 온보딩 포인트 100P를 전달드립니다. 즐겁고 보람찬 여정을 함께 만들어가요! 👏✨",
+    cheersCount: 35,
+    cheeredByMe: true,
+    createdAt: "1시간 전",
+  },
+  {
+    id: "rec-1",
+    senderId: "user-2",
+    receiverId: "user-1",
+    pointsAmount: 50,
+    coreValueTag: "#고객집착",
+    message:
+      "금요일 퇴근 직전 결제 모듈 버그가 발견되었을 때, 지체 없이 함께 원인을 파악하고 30분 만에 핫픽스를 배포해주셨어요. 덕분에 주말 프로모션을 무사히 시작할 수 있었습니다! 진짜 든든해요 민준님 🚀",
+    cheersCount: 14,
+    cheeredByMe: true,
+    createdAt: "2시간 전",
+  },
+  {
+    id: "rec-2",
+    senderId: "user-1",
+    receiverId: "user-3",
+    pointsAmount: 70,
+    coreValueTag: "#탁월한전문성",
+    message:
+      "이번 2.0 디자인 시스템 구축해주시면서 컴포넌트 접근성(A11y) 가이드까지 꼼꼼히 정리해주셔서 프론트 개발 공수가 절반으로 줄었습니다! 역시 유진님의 디테일은 항상 최고입니다 🎨✨",
+    cheersCount: 9,
+    cheeredByMe: false,
+    createdAt: "1시간 전",
+  },
+  {
+    id: "rec-3",
+    senderId: "user-4",
+    receiverId: "user-2",
+    pointsAmount: 50,
+    coreValueTag: "#원팀",
+    message:
+      "마케팅팀에서 요청드린 UTM 트래킹 스펙을 급한 일정 속에서도 우선순위 조정해 기획서에 즉시 반영해주셔서 감사합니다! 부서 간 협업의 정석을 보여주시는 서연님 최고! 👏",
+    cheersCount: 12,
+    cheeredByMe: true,
+    createdAt: "3시간 전",
+  },
+  {
+    id: "rec-4",
+    senderId: "user-5",
+    receiverId: "user-6",
+    pointsAmount: 100,
+    coreValueTag: "#빠른실행",
+    message:
+      "입사 한 달 차이신데도 사내 온보딩 위키 문서의 오래된 환경설정 오류들을 스스로 발견하고 직접 PR 올려서 고쳐주셨어요! 전사 신규 입사자들에게 큰 도움이 되었습니다. 환영합니다 승우님! 🌱",
+    cheersCount: 21,
+    cheeredByMe: false,
+    createdAt: "어제",
+  },
+];
+
+export const INITIAL_NUDGES: GrowthNudge[] = [
+  {
+    id: "nudge-1",
+    senderId: "user-2",
+    receiverId: "user-1",
+    templateCategory: "소통 방식",
+    situation: "어제 긴급 배포 전 지라(Jira) 티켓 상태 변경 시",
+    behavior: "슬랙 스레드에 진행 상태 업데이트 멘션이 조금 늦게 공유되어",
+    impact:
+      "관련 QA 담당자가 작업 완료 여부를 바로 파악하기 어려웠어요. 진행 상황을 이모지나 짧은 멘션으로 즉시 남겨주시면 협업이 한결 부드러워질 것 같습니다!",
+    isRead: false,
+    createdAt: "2일 전",
+  },
+  {
+    id: "nudge-2",
+    senderId: "user-4",
+    receiverId: "user-1",
+    templateCategory: "회의 에티켓",
+    situation: "매주 월요일 스프린트 킥오프 미팅에서",
+    behavior: "회의 시작 시간 5분 후 참석하시는 경우가 종종 있었어요",
+    impact:
+      "아젠다 공유가 늦어져 전체 일정이 밀릴 수 있어요. 2분 전 미리 구글 밋에 접속해 대기해주시면 큰 도움이 될 것 같습니다 🙏",
+    isRead: true,
+    createdAt: "1주일 전",
+  },
+];
+
+export const STORE_ITEMS: StoreItem[] = [
+  {
+    id: "store-sbux",
+    name: "스타벅스 카페 아메리카노 T",
+    brand: "스타벅스",
+    category: "coffee",
+    price: 4500,
+    image: "https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=300&auto=format&fit=crop&q=80",
+    badge: "BEST",
+    description: "동료들의 칭찬 포인트로 즐기는 깊고 진한 에스프레소 한 잔",
+  },
+  {
+    id: "store-naver",
+    name: "네이버페이 포인트 10,000원권",
+    brand: "네이버페이",
+    category: "voucher",
+    price: 10000,
+    image: "https://images.unsplash.com/photo-1559526324-4b87b5e36e44?w=300&auto=format&fit=crop&q=80",
+    badge: "인기 1위",
+    description: "쇼핑, 배달, 디지털 콘텐츠 어디서나 현금처럼 사용 가능",
+  },
+  {
+    id: "store-baemin",
+    name: "배달의민족 상품권 20,000원권",
+    brand: "배달의민족",
+    category: "food",
+    price: 20000,
+    image: "https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=300&auto=format&fit=crop&q=80",
+    badge: "회식지원",
+    description: "오늘 저녁은 동료들의 감사 포인트로 맛있는 야식 파티!",
+  },
+  {
+    id: "store-cu",
+    name: "CU 모바일 상품권 5,000원권",
+    brand: "CU 편의점",
+    category: "voucher",
+    price: 5000,
+    image: "https://images.unsplash.com/photo-1528698827591-e19ccd7bc23d?w=300&auto=format&fit=crop&q=80",
+    description: "점심시간 편의점 간식 & 에너지 드링크 즉시 결제",
+  },
+  {
+    id: "store-custom-early",
+    name: "금요일 2시간 조기 퇴근권",
+    brand: "회사 사내 복지",
+    category: "custom",
+    price: 5000,
+    image: "https://images.unsplash.com/photo-1499750310107-5fef28a66643?w=300&auto=format&fit=crop&q=80",
+    badge: "사내 특별 복지",
+    isCustomBenefit: true,
+    description: "관리자 승인 불필요! 금요일 오후 4시 퇴근으로 주말을 먼저 시작하세요.",
+  },
+  {
+    id: "store-custom-lunch",
+    name: "대표님과의 1:1 오마카세 런치권",
+    brand: "회사 사내 복지",
+    category: "custom",
+    price: 15000,
+    image: "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=300&auto=format&fit=crop&q=80",
+    badge: "경영진 소통",
+    isCustomBenefit: true,
+    description: "회사가 결제하는 최고급 스시 오마카세! 고민 상담 & 비전 공유의 시간.",
+  },
+  {
+    id: "store-custom-book",
+    name: "업무 관련 도서 3만원 구입 지원",
+    brand: "회사 사내 복지",
+    category: "custom",
+    price: 3000,
+    image: "https://images.unsplash.com/photo-1512820790803-83ca734da794?w=300&auto=format&fit=crop&q=80",
+    badge: "자기계발",
+    isCustomBenefit: true,
+    description: "개발, 디자인, 마케팅 도서 신청 시 법인카드 영수증 증빙 없이 즉시 지원",
+  },
+];
+
+export const INITIAL_COMPLIANCE_REPORTS: ComplianceReport[] = [
+  {
+    id: "rep-8821",
+    anonymousHash: "sha256-e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    category: "부당 업무 지시",
+    title: "주말 심야 비상 호출 및 개인 심부름성 업무 지시 건",
+    details:
+      "최근 특정 프로젝트 진행 중 휴일 밤 11시 이후 슬랙으로 즉시 응답하지 않으면 인사상 불이익을 언급하는 식의 발언이 반복되고 있습니다. 심리적 압박이 극심합니다.",
+    status: "reviewing",
+    createdAt: "3일 전",
+    messages: [
+      {
+        id: "msg-1",
+        sender: "reporter",
+        text: "사내 메신저 캡처본 증빙을 첨부하였습니다. 익명이 확실히 보장되는지 다시 한번 확인 부탁드립니다.",
+        time: "3일 전 14:20",
+      },
+      {
+        id: "msg-2",
+        sender: "hr",
+        text: "안녕하세요 제보자님. 본 채널은 단방향 영지식 해시로 암호화되어 인사팀 및 DBA도 제보자의 신원을 역추적할 수 없습니다. 제출해주신 내용을 바탕으로 해당 관리자와의 면담 및 사실관계 조사를 신속히 착수하겠습니다.",
+        time: "2일 전 09:30",
+      },
+    ],
+  },
+];

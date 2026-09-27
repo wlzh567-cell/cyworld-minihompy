@@ -21,13 +21,19 @@ export const viewport: Viewport = {
   maximumScale: 1,
   userScalable: false,
   viewportFit: "cover",
-  themeColor: "#F9F8F5",
+  themeColor: "#090D16",
 };
 
 export const metadata: Metadata = {
-  title: "ON:ROOM (온룸) | 취향과 온기가 켜지는 나만의 디지털 방",
+  title: "kudoworks | B2B 사내 동료 인정 및 조직 문화 인텔리전스",
   description:
-    "복잡한 피드에서 벗어나 온전히 나로 머무는 곳. 모던 뉴트로 감성의 2.5D 인터랙티브 소셜 룸 플랫폼 ON:ROOM 사전 예약 중! 지금 가입 시 한정판 빈티지 오브제 & 1,500 페블 100% 증정.",
+    "동료의 인정과 온기를 데이터로, 건강한 조직 문화를 만드는 B2B 피어 레코그니션 & 컬처 인텔리전스 SaaS kudoworks.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "black-translucent",
+    title: "kudoworks",
+  },
   keywords: [
     "ONROOM",
     "온룸",
